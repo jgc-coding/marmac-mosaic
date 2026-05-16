@@ -1,0 +1,19 @@
+# OS / Editor
+Thumbs.db
+.DS_Store
+desktop.ini
+*.tmp
+*.bak
+*.xcf
+
+# Quellordner bleiben lokal — die fertig fürs Web aufbereiteten
+# Kopien liegen schon in site/assets/. So bleibt der Repo klein,
+# und urheberrechtlich sensible Originale (z. B. Elvis-Foto) sind
+# nicht in einem öffentlichen Repo.
+/Hero Sektion/
+/Arbeitsproben/
+
+# Claude-Code-Einstellungen — nur die launch.json behalten,
+# damit der Preview-Server-Trick beim erneuten Öffnen sofort geht.
+.claude/*
+!.claude/launch.json
