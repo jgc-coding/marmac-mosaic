@@ -159,15 +159,45 @@ a:hover { color: var(--color-accent-dk); }
   height: 100svh; /* iOS-Safari: korrekte Viewport-Höhe */
   overflow: hidden;
   background: var(--color-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* Desktop: Video deckt die gesamte Hero-Fläche ab (16:9 → croppt links/rechts). */
 .hero__video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Hauchdünner Vignettierung-Effekt über pseudo (optional dezent) */
+}
+
+/* Mobile: 16:9 würde stark beschnitten → Video sitzt in seinem
+   natürlichen Format zentriert auf cremigem Grund, gerahmt durch
+   einen weichen Schatten ("Galeriewerk an der Wand"-Optik). */
+@media (max-width: 767px) {
+  .hero {
+    height: auto;
+    min-height: 80svh;
+    background: var(--color-bg);
+    padding: clamp(5rem, 14svh, 7rem) 0 clamp(4rem, 10svh, 5rem);
+  }
+  .hero__video {
+    position: static;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    aspect-ratio: 16 / 9;
+    background: var(--color-deep);
+    box-shadow: 0 22px 60px -22px rgba(42, 31, 23, 0.45),
+                0 4px 12px -6px rgba(42, 31, 23, 0.25);
+  }
+  /* Chevron auf Mobile etwas dunkler (vor Creme-Grund statt Video). */
+  .hero__scroll {
+    color: var(--color-ink-soft);
+    text-shadow: none;
+  }
 }
 
 .hero__scroll {
