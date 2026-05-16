@@ -175,13 +175,15 @@ a:hover { color: var(--color-accent-dk); }
 
 /* Mobile: 16:9 würde stark beschnitten → Video sitzt in seinem
    natürlichen Format zentriert auf cremigem Grund, gerahmt durch
-   einen weichen Schatten ("Galeriewerk an der Wand"-Optik). */
+   einen weichen Schatten ("Galeriewerk an der Wand"-Optik).
+   Hero ist nur so hoch wie Video + etwas Luft, damit der Inhalt
+   darunter näher an das Video rückt (weniger Cream-Leere). */
 @media (max-width: 767px) {
   .hero {
     height: auto;
-    min-height: 80svh;
+    min-height: 0;
     background: var(--color-bg);
-    padding: clamp(5rem, 14svh, 7rem) 0 clamp(4rem, 10svh, 5rem);
+    padding: clamp(5rem, 14svh, 7rem) 0 clamp(2.5rem, 7svh, 3.25rem);
   }
   .hero__video {
     position: static;
@@ -193,11 +195,78 @@ a:hover { color: var(--color-accent-dk); }
     box-shadow: 0 22px 60px -22px rgba(42, 31, 23, 0.45),
                 0 4px 12px -6px rgba(42, 31, 23, 0.25);
   }
-  /* Chevron auf Mobile etwas dunkler (vor Creme-Grund statt Video). */
+  /* Chevron auf Mobile etwas dunkler (vor Creme-Grund statt Video)
+     und enger ans Video gerückt. */
   .hero__scroll {
+    position: static;
+    transform: none;
+    margin: 1.25rem auto 0;
     color: var(--color-ink-soft);
     text-shadow: none;
   }
+  /* "Bisherige Arbeiten"-Headline rückt damit näher ans Video. */
+  .section--works {
+    padding-top: clamp(2rem, 6vw, 3.5rem);
+  }
+  .section__head {
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  /* Vorher/Nachher auf Mobile: beide Bilder gleichzeitig sichtbar,
+     leicht zueinander gekippt, das fertige Mosaik liegt sichtbar
+     über der Vorlage (z-index + Schatten). Wirkt wie zwei
+     Polaroids, locker auf einen Tisch geworfen. */
+  .work__pair {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+  }
+
+  /* Pfeil auf Mobile weglassen — die Überlappung erzählt die
+     Vorher/Nachher-Geschichte selbst. */
+  .work__arrow { display: none; }
+
+  .work__side {
+    position: absolute;
+    width: 62%;
+    margin: 0;
+    transition: transform 0.5s var(--ease);
+  }
+
+  /* Originalfoto: oben links, leicht nach links geneigt, hinten. */
+  .work__pair > .work__side:first-of-type {
+    top: 0;
+    left: 0;
+    transform: rotate(-2.5deg);
+    transform-origin: center;
+    z-index: 1;
+  }
+
+  /* Mosaik: unten rechts, leicht nach rechts geneigt, im Vordergrund. */
+  .work__pair > .work__side:last-of-type {
+    bottom: 0;
+    right: 0;
+    transform: rotate(2.5deg);
+    transform-origin: center;
+    z-index: 2;
+  }
+
+  /* Mosaik bekommt etwas mehr Schatten — es schwebt sichtbar
+     über der Vorlage und gewinnt Tiefe. */
+  .work__pair > .work__side:last-of-type .work__image {
+    box-shadow: 0 4px 10px var(--color-line),
+                0 32px 60px -22px rgba(42, 31, 23, 0.55);
+  }
+
+  /* Labels auf Mobile ausblenden — die Überlappung erzählt
+     selbst klar, welches Bild Vorlage und welches Mosaik ist.
+     Spart außerdem visuellen Lärm in der dichten Komposition. */
+  .work__label { display: none; }
+
+  /* Etwas Abstand zwischen überlappendem Paar und der Caption. */
+  .work__caption { margin-top: 1rem; }
 }
 
 .hero__scroll {
