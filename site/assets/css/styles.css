@@ -224,30 +224,39 @@ a:hover { color: var(--color-accent-dk); }
   align-items: center;
 }
 
+/* Menu-Links als dezente Pills — von Anfang an als klickbare
+   Elemente erkennbar, ohne aufdringlich zu wirken: zarter Border
+   + Hauch Hintergrundtönung im Ruhezustand, satter bei Hover/Focus. */
 .menu__link {
   position: relative;
-  display: inline-block;
-  padding: 0.4rem 0.1rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
   font-family: var(--font-menu);
   font-weight: var(--font-menu-weight);
   letter-spacing: var(--font-menu-letter);
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   color: var(--color-ink);
   white-space: nowrap;
+  border: 1px solid rgba(184, 117, 74, 0.22);
+  border-radius: 999px;
+  background: rgba(184, 117, 74, 0.05);
+  transition: background-color 0.25s var(--ease),
+              border-color 0.25s var(--ease),
+              color 0.25s var(--ease),
+              transform 0.25s var(--ease);
 }
-
-.menu__link::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: -2px;
-  height: 1px;
-  background: var(--color-accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s var(--ease);
+.menu__link:hover,
+.menu__link:focus {
+  background: rgba(184, 117, 74, 0.16);
+  border-color: var(--color-accent);
+  color: var(--color-ink);
+  transform: translateY(-1px);
 }
-.menu__link:hover::after,
-.menu__link:focus::after { transform: scaleX(1); }
+.menu__link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
 
 /* Submenu — Dropdown. Default: nach unten. Variante .submenu--up
    öffnet nach oben (im Hero-Bereich, damit es nicht abgeschnitten wird). */
@@ -320,11 +329,14 @@ a:hover { color: var(--color-accent-dk); }
    damit es nicht außerhalb des Viewports steht. */
 .menu--top { gap: clamp(0.9rem, 2vw, 1.75rem); }
 
-/* Mobile-Anpassung Top-Nav: deutlich kompakter, damit Brand + 3 Links
-   + EN-Pille gemeinsam in den 375px-Viewport passen. */
+/* Mobile-Anpassung Top-Nav: Pill-Padding kompakter, damit Brand +
+   3 Pills + EN-Pille gemeinsam in den 375px-Viewport passen. */
 @media (max-width: 540px) {
-  .menu--top { gap: 0.55rem; }
-  .menu--top .menu__link { font-size: 0.72rem; padding: 0.4rem 0.05rem; }
+  .menu--top { gap: 0.4rem; }
+  .menu--top .menu__link {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+  }
   /* Padding-Right reserviert Platz für die schwebende EN-Pille. */
   .nav__inner { gap: 0.3rem; padding: 0 4.5rem 0 0.6rem; }
   .nav__right { gap: 0.5rem; }
@@ -355,8 +367,11 @@ a:hover { color: var(--color-accent-dk); }
 
 /* Ganz kleine Viewports (z. B. iPhone SE = 320 CSS-px): noch enger. */
 @media (max-width: 380px) {
-  .menu--top { gap: 0.4rem; }
-  .menu--top .menu__link { font-size: 0.68rem; }
+  .menu--top { gap: 0.3rem; }
+  .menu--top .menu__link {
+    font-size: 0.68rem;
+    padding: 0.28rem 0.45rem;
+  }
   .nav__inner { padding-right: 4rem; }
   .nav__brand { font-size: 0.85rem; }
 }
@@ -387,9 +402,14 @@ a:hover { color: var(--color-accent-dk); }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(5rem, 14vh, 8rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 12vh, 7rem);
+  /* Bottom-Padding großzügig — gibt dem nach unten aufklappenden
+     Submenu Platz innerhalb der Hero-Sektion, ohne in die nächste
+     Sektion zu ragen. */
+  padding: clamp(5rem, 14vh, 8rem) clamp(1.25rem, 5vw, 3rem) clamp(7rem, 16vh, 11rem);
   text-align: center;
-  overflow: hidden;
+  /* overflow: visible, damit WindSong-Schwungflourishes (z. B. das
+     "c" am Wortende) nicht beschnitten werden. */
+  overflow: visible;
 }
 
 /* Schriftzug — die ehemalige "Bild"-Rolle übernimmt jetzt reine Typo.
@@ -399,15 +419,19 @@ a:hover { color: var(--color-accent-dk); }
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(3.6rem, 11vw, 8.5rem);
+  font-size: clamp(3.4rem, 10vw, 8rem);
   line-height: 1.05;
   color: var(--color-ink);
   letter-spacing: 0;
-  /* Großzügiges Padding-Block, damit Ober-/Unterlängen der Skript
-     nicht abgeschnitten werden. */
+  /* Padding-Block: Ober-/Unterlängen der Skript nicht abschneiden.
+     Padding-Inline: WindSong-Schwungflourishes (besonders das "c"
+     mit seinem nachlaufenden Schwung) ragen oft über die Bounding-
+     Box hinaus — Innenabstand gibt ihnen Luft, max-width verhindert
+     Side-Overflow auf engen Viewports. */
   padding-block: 0.15em;
-  /* Sanfter Farbverlauf in der Schrift selbst — gibt der Skript
-     etwas Tiefe ohne knallig zu sein. */
+  padding-inline: 0.25em;
+  max-width: 100%;
+  /* Sanfter Farbverlauf in der Schrift selbst — Tiefe ohne knallig. */
   background: linear-gradient(160deg, var(--color-accent-dk) 0%, var(--color-ink) 60%, var(--color-accent-dk) 100%);
   -webkit-background-clip: text;
           background-clip: text;
