@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title data-i18n="meta.title">MarMac-Mosaic — Personalisierte Mosaik-Porträts von Martina</title>
-  <meta name="description" data-i18n-content="meta.description" content="MarMac-Mosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
+  <title data-i18n="meta.title">MarMacMosaic — Personalisierte Mosaik-Porträts von Martina</title>
+  <meta name="description" data-i18n-content="meta.description" content="MarMacMosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
   <meta name="theme-color" content="#F5EFE6" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="MarMac-Mosaic — Personalisierte Mosaik-Porträts" />
+  <meta property="og:title" content="MarMacMosaic — Personalisierte Mosaik-Porträts" />
   <meta property="og:description" content="Vom Foto zum handgesetzten Mosaik. Porträts von Martina." />
   <meta property="og:locale" content="de_DE" />
 
@@ -34,7 +34,7 @@
        ============================================================ -->
   <header class="nav" id="nav" aria-label="Hauptnavigation">
     <div class="nav__inner">
-      <a class="nav__brand" href="#top">MarMac-Mosaic</a>
+      <a class="nav__brand" href="#top">MarMacMosaic</a>
       <nav class="menu menu--top">
         <div class="menu__item menu__item--has-submenu">
           <a
@@ -71,14 +71,17 @@
 
   <main id="top">
     <!-- ============================================================
-         2. HERO — reiner Schriftzug "MarMac-Mosaic" in WindSong
+         2. HERO — reiner Schriftzug "MarMacMosaic" in WindSong
          + Subline in Cormorant-Garamond-Italic (eleganter Kontrast
          zur Skript-Schrift). Heller Cremegrund.
          Zentrales Menü unter der Subline; Submenu öffnet nach OBEN
          damit es nicht vom Hero-Boden abgeschnitten wird.
          ============================================================ -->
-    <section class="hero" id="hero" aria-label="MarMac-Mosaic">
-      <h1 class="hero__title">MarMac-Mosaic</h1>
+    <section class="hero" id="hero" aria-label="MarMacMosaic">
+      <!-- <br class="hero__break"/> ist auf Desktop versteckt (display:none),
+           auf Mobile sichtbar — sorgt dort für Zeilenumbruch zwischen
+           "MarMac" und "Mosaic" ohne Bindestrich. -->
+      <h1 class="hero__title">MarMac<br class="hero__break" />Mosaic</h1>
       <p class="hero__subline" data-i18n="hero.subline">Personalisierte Mosaik-Porträts</p>
 
       <nav class="menu menu--hero" aria-label="Einstiegsnavigation">
@@ -239,7 +242,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <p class="footer__name">MarMac-Mosaic</p>
+        <p class="footer__name">MarMacMosaic</p>
         <p class="footer__claim" data-i18n="footer.claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
       </div>
       <nav class="footer__nav" aria-label="Footer-Navigation">
@@ -253,7 +256,7 @@
           ·
           <a href="datenschutz.html" data-i18n="footer.privacy">Datenschutz</a>
         </p>
-        <p class="footer__copy">© 2026 MarMac-Mosaic</p>
+        <p class="footer__copy">© 2026 MarMacMosaic</p>
       </div>
     </div>
   </footer>
@@ -301,6 +304,7 @@
     <button type="button" data-menu-style="pills">Pills (Tönung)</button>
     <button type="button" data-menu-style="outline">Outline</button>
     <button type="button" data-menu-style="underline">Underline</button>
+    <button type="button" data-menu-style="lines">Lines (oben + unten)</button>
     <button type="button" data-menu-style="solid">Solid</button>
   </aside>
 </body>

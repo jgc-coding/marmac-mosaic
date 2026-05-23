@@ -1,5 +1,5 @@
 /* ============================================================
-   MarMac-Mosaic — i18n.js
+   MarMacMosaic — i18n.js
    DE/EN-Sprachschalter (aktiv, persistiert in localStorage).
    --------------------------------------------------------------
    Verwendung im HTML:
@@ -15,8 +15,8 @@ window.I18N = {
 
   strings: {
     de: {
-      'meta.title':           'MarMac-Mosaic — Personalisierte Mosaik-Porträts von Martina',
-      'meta.description':     'MarMac-Mosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk.',
+      'meta.title':           'MarMacMosaic — Personalisierte Mosaik-Porträts von Martina',
+      'meta.description':     'MarMacMosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk.',
 
       'nav.works':            'Arbeiten',
       'nav.about':            'Über mich',
@@ -89,8 +89,8 @@ window.I18N = {
     },
 
     en: {
-      'meta.title':           'MarMac-Mosaic — Personalized Mosaic Portraits by Martina',
-      'meta.description':     'MarMac-Mosaic: handcrafted, personalized mosaic portraits from your favorite motif. From photo to a real piece of art.',
+      'meta.title':           'MarMacMosaic — Personalized Mosaic Portraits by Martina',
+      'meta.description':     'MarMacMosaic: handcrafted, personalized mosaic portraits from your favorite motif. From photo to a real piece of art.',
 
       'nav.works':            'Works',
       'nav.about':            'About',

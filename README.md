@@ -1,6 +1,6 @@
-# MarMac-Mosaic — Website
+# MarMacMosaic — Website
 
-One-Page-Landingpage für Martina ("MarMac-Mosaic") — personalisierte, handgefertigte Mosaik-Porträts. Reines HTML/CSS/JS, kein Build.
+One-Page-Landingpage für Martina ("MarMacMosaic") — personalisierte, handgefertigte Mosaik-Porträts. Reines HTML/CSS/JS, kein Build.
 
 ## Lokale Entwicklung
 

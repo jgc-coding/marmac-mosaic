@@ -478,7 +478,7 @@
      Vier Varianten: pills / outline / underline / solid.
      Wahl wird via data-menu-style auf <body> gesetzt; CSS reagiert.
      ============================================================ */
-  const MENU_STYLES = ['pills', 'outline', 'underline', 'solid'];
+  const MENU_STYLES = ['pills', 'outline', 'underline', 'lines', 'solid'];
   const MENU_STORAGE_KEY = 'marmac-menu-style';
 
   function applyMenuStyle(style) {
