@@ -10,28 +10,37 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap"
   />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <script defer src="assets/js/i18n.js"></script>
+  <script defer src="assets/js/legal.js"></script>
 </head>
 <body class="legal-page">
-  <header class="nav nav--minimal" aria-label="Hauptnavigation">
+  <header class="nav nav--minimal nav--always" aria-label="Hauptnavigation">
     <div class="nav__inner">
       <a class="nav__brand" href="index.html">MarMac-Mosaic</a>
-      <a class="nav__back" href="index.html">← Zurück zur Startseite</a>
+      <a class="nav__back" href="index.html" data-i18n="nav.back">← Zurück zur Startseite</a>
     </div>
   </header>
+  <button
+    type="button"
+    class="lang-switch lang-switch--floating"
+    data-lang-switch
+    data-i18n="nav.lang.toggle"
+    data-i18n-aria="nav.lang.aria"
+    aria-label="Switch language to English"
+  >EN</button>
 
   <main class="legal">
     <div class="container">
-      <p class="section__eyebrow">Rechtliches</p>
-      <h1 class="section__title">Datenschutzerklärung</h1>
+      <p class="section__eyebrow" data-i18n="privacy.eyebrow">Rechtliches</p>
+      <h1 class="section__title"  data-i18n="privacy.title">Datenschutzerklärung</h1>
 
       <p class="legal__placeholder">
-        <em>
+        <em data-i18n="privacy.placeholder">
           Hinweis: Diese Seite ist ein Platzhalter und wird von Martina mit
-          einer rechtskonformen Datenschutzerklärung ersetzt — z. B. erstellt
-          mit einem Generator wie e-recht24.de, datenschutz-generator.de o. ä.
+          einer rechtskonformen Datenschutzerklärung ersetzt.
         </em>
       </p>
 
@@ -69,8 +78,8 @@
       <h2>5. Cookies</h2>
       <p>
         Diese Website verwendet keine Tracking-Cookies. Lediglich der lokale
-        Browser-Speicher (localStorage) wird genutzt, um die Wahl der
-        Menü-Schrift zu speichern, sofern du das Schrift-Picker-Widget nutzt.
+        Browser-Speicher (localStorage) wird genutzt, um deine Sprachwahl
+        (Deutsch / Englisch) und die Wahl der Menü-Schrift zu speichern.
       </p>
 
       <h2>6. Externe Inhalte</h2>
@@ -87,15 +96,19 @@
     <div class="container footer__inner">
       <div class="footer__brand">
         <p class="footer__name">MarMac-Mosaic</p>
-        <p class="footer__claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
+        <p class="footer__claim" data-i18n="footer.claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
       </div>
       <nav class="footer__nav" aria-label="Footer-Navigation">
-        <a href="index.html#arbeiten">Arbeiten</a>
-        <a href="index.html#ueber-mich">Über mich</a>
-        <a href="index.html#kontakt">Kontakt</a>
+        <a href="index.html#arbeiten"   data-i18n="nav.works">Arbeiten</a>
+        <a href="index.html#ueber-mich" data-i18n="nav.about">Über mich</a>
+        <a href="index.html#kontakt"    data-i18n="nav.contact">Kontakt</a>
       </nav>
       <div class="footer__legal">
-        <p><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
+        <p>
+          <a href="impressum.html"   data-i18n="footer.imprint">Impressum</a>
+          ·
+          <a href="datenschutz.html" data-i18n="footer.privacy">Datenschutz</a>
+        </p>
         <p class="footer__copy">© 2026 MarMac-Mosaic</p>
       </div>
     </div>

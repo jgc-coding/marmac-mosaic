@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>MarMac-Mosaic — Personalisierte Mosaik-Porträts von Martina</title>
-  <meta name="description" content="MarMac-Mosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
+  <title data-i18n="meta.title">MarMac-Mosaic — Personalisierte Mosaik-Porträts von Martina</title>
+  <meta name="description" data-i18n-content="meta.description" content="MarMac-Mosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
   <meta name="theme-color" content="#F5EFE6" />
 
   <!-- Open Graph -->
@@ -13,31 +13,24 @@
   <meta property="og:description" content="Vom Foto zum handgesetzten Mosaik. Porträts von Martina." />
   <meta property="og:locale" content="de_DE" />
 
-  <!-- Fonts:
-       - WindSong: Display (Hero-Subline, Section-Headlines, Top-Logo)
-       - Cormorant Garamond: Fallback / Sub-Headings
-       - Inter: Body
-       - Italianno + Source Sans 3 + Courier Prime:
-         drei Menü-Schriftvarianten (Martinas Wunsch zum Vergleichen),
-         live umschaltbar via ?fonts=picker -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&family=Italianno&family=Source+Sans+3:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=Italianno&family=Source+Sans+3:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap"
   />
 
   <link rel="stylesheet" href="assets/css/styles.css" />
-  <!-- Reihenfolge: Daten + i18n vor main.js (main.js liest WORKS/I18N). -->
   <script defer src="assets/js/works.js"></script>
   <script defer src="assets/js/i18n.js"></script>
   <script defer src="assets/js/main.js"></script>
 </head>
 <body>
   <!-- ============================================================
-       1. TOP-NAV — sticky, von Anfang an sichtbar.
-       Logo in WindSong (kursiv-handschriftlich, wie die Headlines).
-       Enthält dieselben Menü-Komponente wie die Hero-Nav.
+       1. TOP-NAV — beim ersten Aufruf versteckt, erscheint smooth,
+       sobald der Hero verlassen wird (IntersectionObserver in main.js).
+       Logo in WindSong; Lang-Switcher rechts als hervorgehobene Pille.
        ============================================================ -->
   <header class="nav" id="nav" aria-label="Hauptnavigation">
     <div class="nav__inner">
@@ -50,36 +43,44 @@
             data-submenu-toggle
             aria-haspopup="true"
             aria-expanded="false"
+            data-i18n="nav.works"
           >Arbeiten</a>
           <ul class="submenu" role="menu">
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen">Ikonen</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits">Persönliche Porträts</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere">Haustiere</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes">Verschiedenes</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen"        data-i18n="submenu.icons">Ikonen</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits"     data-i18n="submenu.portraits">Persönliche Porträts</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere"     data-i18n="submenu.pets">Haustiere</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes" data-i18n="submenu.misc">Verschiedenes</a></li>
           </ul>
         </div>
-        <a class="menu__link" href="#ueber-mich">Über mich</a>
-        <a class="menu__link" href="#kontakt">Kontakt</a>
+        <a class="menu__link" href="#ueber-mich" data-i18n="nav.about">Über mich</a>
+        <a class="menu__link" href="#kontakt"    data-i18n="nav.contact">Kontakt</a>
       </nav>
     </div>
   </header>
 
+  <!-- Lang-Switcher: schwebt IMMER oben rechts, unabhängig vom Nav-State.
+       So ist der DE/EN-Toggle auch direkt im Hero-Bereich sichtbar. -->
+  <button
+    type="button"
+    class="lang-switch lang-switch--floating"
+    data-lang-switch
+    data-i18n="nav.lang.toggle"
+    data-i18n-aria="nav.lang.aria"
+    aria-label="Switch language to English"
+  >EN</button>
+
   <main id="top">
     <!-- ============================================================
-         2. HERO — statischer Mosaik-Schriftzug + zentrales Menü.
-         Kein Video mehr (v1 via Tag v1-with-video wiederherstellbar).
+         2. HERO — reiner Schriftzug "MarMac-Mosaic" in WindSong
+         + Subline in Cormorant-Garamond-Italic (eleganter Kontrast
+         zur Skript-Schrift). Heller Cremegrund.
+         Zentrales Menü unter der Subline; Submenu öffnet nach OBEN
+         damit es nicht vom Hero-Boden abgeschnitten wird.
          ============================================================ -->
     <section class="hero" id="hero" aria-label="MarMac-Mosaic">
-      <img
-        class="hero__image"
-        src="assets/images/hero-marmac-mosaic.png"
-        alt="MarMac-Mosaic — Schriftzug aus farbigen Mosaiksteinen auf Holz"
-        fetchpriority="high"
-      />
-      <p class="hero__subline">Personalisierte Mosaik-Porträts</p>
+      <h1 class="hero__title">MarMac-Mosaic</h1>
+      <p class="hero__subline" data-i18n="hero.subline">Personalisierte Mosaik-Porträts</p>
 
-      <!-- Zentrale Einstiegs-Navigation: erscheint sichtbar unter
-           dem Schriftzug, identisch zur Top-Nav. -->
       <nav class="menu menu--hero" aria-label="Einstiegsnavigation">
         <div class="menu__item menu__item--has-submenu">
           <a
@@ -88,209 +89,144 @@
             data-submenu-toggle
             aria-haspopup="true"
             aria-expanded="false"
+            data-i18n="nav.works"
           >Arbeiten</a>
-          <ul class="submenu" role="menu">
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen">Ikonen</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits">Persönliche Porträts</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere">Haustiere</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes">Verschiedenes</a></li>
+          <ul class="submenu submenu--up" role="menu">
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen"        data-i18n="submenu.icons">Ikonen</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits"     data-i18n="submenu.portraits">Persönliche Porträts</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere"     data-i18n="submenu.pets">Haustiere</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes" data-i18n="submenu.misc">Verschiedenes</a></li>
           </ul>
         </div>
-        <a class="menu__link" href="#ueber-mich">Über mich</a>
-        <a class="menu__link" href="#kontakt">Kontakt</a>
+        <a class="menu__link" href="#ueber-mich" data-i18n="nav.about">Über mich</a>
+        <a class="menu__link" href="#kontakt"    data-i18n="nav.contact">Kontakt</a>
       </nav>
     </section>
 
     <!-- ============================================================
-         3. INTRO — "Vom Foto zum Mosaik" (Erklärtext, Platzhalter).
-         Martina liefert finalen Text nach. Wort "Porträt" soll
-         laut Briefing 6 prominent vorkommen.
+         3. INTRO
          ============================================================ -->
     <section class="section section--intro" id="intro">
       <div class="container intro">
         <header class="section__head" data-reveal>
-          <p class="section__eyebrow">Vom Foto zum Mosaik</p>
-          <h2 class="section__title">Dein Porträt — Stein für Stein.</h2>
+          <p class="section__eyebrow" data-i18n="intro.eyebrow">Vom Foto zum Mosaik</p>
+          <h2 class="section__title"  data-i18n="intro.title">Dein Porträt — Stein für Stein.</h2>
         </header>
         <div class="intro__body" data-reveal>
-          <p>
-            Aus einem persönlichen Foto entsteht ein handgesetztes Mosaik-Porträt
-            — sei es eine geliebte Person, ein Haustier oder eine Ikone, die dich
-            begleitet. Jedes Werk ist ein Unikat, gefertigt aus tausenden kleinen
-            Glas-, Keramik- und Natursteinen.
-          </p>
-          <p>
-            <em>(Dieser Text ist ein Platzhalter und wird später durch Martinas
-            eigene Worte ersetzt.)</em>
-          </p>
+          <p data-i18n="intro.body1">Aus einem persönlichen Foto entsteht ein handgesetztes Mosaik-Porträt — sei es eine geliebte Person, ein Haustier oder eine Ikone, die dich begleitet. Jedes Werk ist ein Unikat, gefertigt aus tausenden kleinen Glas-, Keramik- und Natursteinen.</p>
+          <p><em data-i18n="intro.body2">(Dieser Text ist ein Platzhalter und wird später durch Martinas eigene Worte ersetzt.)</em></p>
         </div>
       </div>
     </section>
 
     <!-- ============================================================
-         4. BISHERIGE ARBEITEN — Tabs (Subkategorien) + Karussell.
-         Das Karussell rendert sich aus window.WORKS pro Kategorie.
-         Layout pro Slide: überlappendes Polaroid-Paar (Vorlage +
-         Mosaik), wie bisher die Mobile-Lösung — jetzt überall.
+         4. BISHERIGE ARBEITEN — Tabs + Karussell
          ============================================================ -->
     <section class="section section--works" id="arbeiten">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__eyebrow">Bisherige Arbeiten</p>
-          <h2 class="section__title">Eine Auswahl</h2>
+          <p class="section__eyebrow" data-i18n="works.eyebrow">Bisherige Arbeiten</p>
+          <h2 class="section__title"  data-i18n="works.title">Eine Auswahl</h2>
         </header>
 
-        <!-- Subkategorien-Tabs. Initial "Ikonen" aktiv. -->
         <nav class="tabs" role="tablist" aria-label="Werk-Kategorien" data-tabs>
-          <button class="tab is-active" role="tab" aria-selected="true"  data-category="ikonen">Ikonen</button>
-          <button class="tab"            role="tab" aria-selected="false" data-category="portraits">Persönliche Porträts</button>
-          <button class="tab"            role="tab" aria-selected="false" data-category="haustiere">Haustiere</button>
-          <button class="tab"            role="tab" aria-selected="false" data-category="verschiedenes">Verschiedenes</button>
+          <button class="tab is-active" role="tab" aria-selected="true"  data-category="ikonen"        data-i18n="submenu.icons">Ikonen</button>
+          <button class="tab"            role="tab" aria-selected="false" data-category="portraits"     data-i18n="submenu.portraits">Persönliche Porträts</button>
+          <button class="tab"            role="tab" aria-selected="false" data-category="haustiere"     data-i18n="submenu.pets">Haustiere</button>
+          <button class="tab"            role="tab" aria-selected="false" data-category="verschiedenes" data-i18n="submenu.misc">Verschiedenes</button>
         </nav>
 
-        <!-- Karussell. JS füllt .carousel__track aus window.WORKS. -->
         <div class="carousel" data-carousel>
           <button class="carousel__btn carousel__btn--prev" aria-label="Vorheriges Werk" data-carousel-prev>‹</button>
           <div class="carousel__viewport" data-carousel-viewport>
-            <div class="carousel__track" data-carousel-track>
-              <!-- Slides werden zur Laufzeit gerendert -->
-            </div>
+            <div class="carousel__track" data-carousel-track></div>
           </div>
           <button class="carousel__btn carousel__btn--next" aria-label="Nächstes Werk" data-carousel-next>›</button>
-
-          <!-- Slide-Indikatoren (Punkte unter dem Karussell). -->
           <div class="carousel__dots" data-carousel-dots aria-hidden="true"></div>
         </div>
 
-        <!-- Wird sichtbar, wenn aktive Kategorie leer ist. -->
         <p class="carousel__empty" data-carousel-empty hidden>
-          <span class="carousel__empty-text">Bald hier zu sehen.</span>
+          <span class="carousel__empty-text" data-i18n="works.empty">Bald hier zu sehen.</span>
         </p>
 
-        <!-- Hinweis-Subtext: Beispielwerke nicht zum Verkauf (Briefing 3.5). -->
-        <p class="works__note" data-reveal>
-          Die hier gezeigten Werke der Kategorie <em>Ikonen</em> dienen als Inspiration
-          — sie sind nicht zum Verkauf. Gerne fertige ich dir dein eigenes
-          Mosaik-Porträt: <a href="#kontakt">Kontaktiere mich</a>.
+        <p class="works__note" data-reveal data-i18n-html="works.note.html">
+          Die hier gezeigten Werke der Kategorie <em>Ikonen</em> dienen als Inspiration — sie sind nicht zum Verkauf. Gerne fertige ich dir dein eigenes Mosaik-Porträt: <a href="#kontakt">Kontaktiere mich</a>.
         </p>
       </div>
     </section>
 
     <!-- ============================================================
-         5. ÜBER MICH — Portrait-Platzhalter + Text-Platzhalter.
-         Inhalt + Foto liefert Martina nach.
+         5. ÜBER MICH
          ============================================================ -->
     <section class="section section--about" id="ueber-mich">
       <div class="container about">
         <div class="about__portrait" data-reveal aria-hidden="true">
           <div class="tile-grid tile-grid--portrait"></div>
         </div>
-
         <div class="about__text" data-reveal>
-          <p class="section__eyebrow">Über mich</p>
-          <h2 class="section__title">Hinter jedem Stein steckt Geduld.</h2>
-          <p>
-            Mein Name ist Martina. Seit Jahren setze ich Mosaike aus Glas-,
-            Keramik- und Natursteinen. Jedes Werk entsteht in Handarbeit —
-            Stein für Stein, oft über Wochen hinweg.
-          </p>
-          <p>
-            Was mich am Mosaik fasziniert: aus tausenden winzigen Teilen
-            entsteht ein einziges großes Porträt. Genau wie Erinnerungen,
-            die ich für meine Kundinnen und Kunden in dauerhafte Kunst
-            verwandle.
-          </p>
-          <p>
-            <em>(Dieser Text ist ein Platzhalter und wird später durch
-            Martinas eigene Worte ersetzt.)</em>
-          </p>
+          <p class="section__eyebrow" data-i18n="about.eyebrow">Über mich</p>
+          <h2 class="section__title"  data-i18n="about.title">Hinter jedem Stein steckt Geduld.</h2>
+          <p data-i18n="about.body1">Mein Name ist Martina. Seit Jahren setze ich Mosaike aus Glas-, Keramik- und Natursteinen. Jedes Werk entsteht in Handarbeit — Stein für Stein, oft über Wochen hinweg.</p>
+          <p data-i18n="about.body2">Was mich am Mosaik fasziniert: aus tausenden winzigen Teilen entsteht ein einziges großes Porträt. Genau wie Erinnerungen, die ich für meine Kundinnen und Kunden in dauerhafte Kunst verwandle.</p>
+          <p><em data-i18n="about.body3">(Dieser Text ist ein Platzhalter und wird später durch Martinas eigene Worte ersetzt.)</em></p>
         </div>
       </div>
     </section>
 
     <!-- ============================================================
-         6. KONTAKT — Formular (mit DSGVO-Häkchen) + Direkt-Links.
-         Headline mit "Mosaik-Porträt" (Briefing 4).
-         Instagram-Slot vorbereitet.
+         6. KONTAKT — Formular + E-Mail + Instagram (WhatsApp raus)
          ============================================================ -->
     <section class="section section--contact" id="kontakt">
       <div class="container">
         <header class="section__head" data-reveal>
-          <p class="section__eyebrow">Kontakt</p>
-          <h2 class="section__title">Lass uns dein Mosaik-Porträt besprechen.</h2>
-          <p class="section__lede">
-            Schreib mir, welches Motiv dir vorschwebt — oder nutze direkt
-            E-Mail oder WhatsApp.
-          </p>
+          <p class="section__eyebrow" data-i18n="contact.eyebrow">Kontakt</p>
+          <h2 class="section__title"  data-i18n="contact.title">Lass uns dein Mosaik-Porträt besprechen.</h2>
+          <p class="section__lede"    data-i18n="contact.lede">Schreib mir, welches Motiv dir vorschwebt — oder nutze direkt E-Mail oder Instagram.</p>
         </header>
 
         <div class="contact">
-          <!-- Formular: aktuell ohne Backend. JS fängt Submit ab und
-               prüft die DSGVO-Checkbox. -->
           <form class="contact__form" id="contact-form" data-reveal novalidate>
             <label class="field">
-              <span class="field__label">Name</span>
+              <span class="field__label" data-i18n="field.name">Name</span>
               <input type="text" name="name" autocomplete="name" required />
             </label>
-
             <label class="field">
-              <span class="field__label">E-Mail</span>
+              <span class="field__label" data-i18n="field.email">E-Mail</span>
               <input type="email" name="email" autocomplete="email" required />
             </label>
-
             <label class="field">
-              <span class="field__label">Nachricht</span>
+              <span class="field__label" data-i18n="field.message">Nachricht</span>
               <textarea name="message" rows="5" required></textarea>
             </label>
-
-            <!-- DSGVO-Häkchen mit Link zur Datenschutzerklärung (Briefing 10). -->
             <label class="field field--checkbox">
               <input type="checkbox" name="dsgvo" required />
-              <span>
-                Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a>
-                gelesen und stimme zu.
-              </span>
+              <span data-i18n-html="field.dsgvo.html">Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und stimme zu.</span>
             </label>
-
-            <button type="submit" class="btn btn--primary">Anfrage senden</button>
-
+            <button type="submit" class="btn btn--primary" data-i18n="contact.send">Anfrage senden</button>
             <p class="contact__form-note" id="contact-form-note" role="status" aria-live="polite"></p>
           </form>
 
-          <!-- Direkte Kontaktwege. Adressen sind Platzhalter. -->
           <aside class="contact__direct" data-reveal aria-label="Direkte Kontaktwege">
-            <p class="contact__direct-intro">Oder direkt:</p>
+            <p class="contact__direct-intro" data-i18n="contact.direct.intro">Oder direkt:</p>
 
             <a class="btn btn--ghost" href="mailto:kontakt@marmac-mosaic.de">
               <span class="btn__icon" aria-hidden="true">✉</span>
               <span>
-                <span class="btn__label">E-Mail schreiben</span>
+                <span class="btn__label" data-i18n="contact.email.label">E-Mail schreiben</span>
                 <span class="btn__sub">kontakt@marmac-mosaic.de</span>
               </span>
             </a>
 
-            <a class="btn btn--ghost" href="https://wa.me/00000000000" target="_blank" rel="noopener">
-              <span class="btn__icon" aria-hidden="true">✆</span>
-              <span>
-                <span class="btn__label">WhatsApp</span>
-                <span class="btn__sub">Direktnachricht senden</span>
-              </span>
-            </a>
-
-            <!-- Instagram-Slot — Container ist da, Link folgt von Martina (Briefing 4).
-                 Wenn href gesetzt wird, einfach den hidden-Attribut entfernen. -->
-            <a class="btn btn--ghost" href="#" hidden data-instagram-slot target="_blank" rel="noopener">
+            <!-- Instagram-Platzhalter — Link wird später von Martina gesetzt. -->
+            <a class="btn btn--ghost" href="https://instagram.com/marmac.mosaic" target="_blank" rel="noopener">
               <span class="btn__icon" aria-hidden="true">◎</span>
               <span>
-                <span class="btn__label">Instagram</span>
-                <span class="btn__sub">@marmac.mosaic</span>
+                <span class="btn__label" data-i18n="contact.instagram.label">Instagram</span>
+                <span class="btn__sub" data-i18n="contact.instagram.sub">@marmac.mosaic</span>
               </span>
             </a>
 
-            <p class="contact__hint">
-              Hinweis: Alle Kontaktdaten sind Platzhalter und werden später
-              durch Martinas echte Adressen ersetzt.
-            </p>
+            <p class="contact__hint" data-i18n="contact.hint">Hinweis: Alle Kontaktdaten sind Platzhalter und werden später durch Martinas echte Adressen ersetzt.</p>
           </aside>
         </div>
       </div>
@@ -298,67 +234,54 @@
   </main>
 
   <!-- ============================================================
-       7. FOOTER — mit Links auf Impressum + Datenschutz.
+       7. FOOTER
        ============================================================ -->
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
         <p class="footer__name">MarMac-Mosaic</p>
-        <p class="footer__claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
+        <p class="footer__claim" data-i18n="footer.claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
       </div>
-
       <nav class="footer__nav" aria-label="Footer-Navigation">
-        <a href="#arbeiten">Arbeiten</a>
-        <a href="#ueber-mich">Über mich</a>
-        <a href="#kontakt">Kontakt</a>
+        <a href="#arbeiten"   data-i18n="nav.works">Arbeiten</a>
+        <a href="#ueber-mich" data-i18n="nav.about">Über mich</a>
+        <a href="#kontakt"    data-i18n="nav.contact">Kontakt</a>
       </nav>
-
       <div class="footer__legal">
-        <p><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
+        <p>
+          <a href="impressum.html"   data-i18n="footer.imprint">Impressum</a>
+          ·
+          <a href="datenschutz.html" data-i18n="footer.privacy">Datenschutz</a>
+        </p>
         <p class="footer__copy">© 2026 MarMac-Mosaic</p>
       </div>
     </div>
   </footer>
 
   <!-- ============================================================
-       DETAIL-OVERLAY — öffnet bei Klick auf ein Werk im Karussell.
-       Enthält oben einen Container für die spätere "Explosions-
-       Animation" (extern als MP4/WebM produziert; siehe Briefing 8
-       und Doku in main.js).
-       Fallback solange kein Asset: zeigt Original + Mosaik
-       nebeneinander.
+       DETAIL-OVERLAY
        ============================================================ -->
   <div class="detail" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="detail-title">
     <button class="detail__close" type="button" aria-label="Schließen">×</button>
     <div class="detail__inner">
       <h3 id="detail-title" class="detail__title"></h3>
-
-      <!-- Animations-Slot: JS hängt hier <video> ein, wenn das Werk
-           einen animation-Pfad hat. Andernfalls bleibt der Slot leer
-           und das Side-by-Side darunter wird sichtbar. -->
       <div class="detail__animation" data-detail-animation></div>
-
       <div class="detail__pair" data-detail-pair>
         <figure class="detail__side">
           <img data-detail-original alt="" />
-          <figcaption>Originalfoto</figcaption>
+          <figcaption data-i18n="detail.original">Originalfoto</figcaption>
         </figure>
         <figure class="detail__side">
           <img data-detail-mosaic alt="" />
-          <figcaption>Mosaik</figcaption>
+          <figcaption data-i18n="detail.mosaic">Mosaik</figcaption>
         </figure>
       </div>
-
       <p class="detail__desc" data-detail-desc></p>
     </div>
   </div>
 
   <!-- ============================================================
-       FONT-PICKER — schwebendes Widget unten rechts, nur sichtbar
-       bei URL ?fonts=picker. Wechselt die Menü-Schrift live zwischen
-       Italianno (Gabriola-like), Source Sans 3 (Candara-like) und
-       Courier Prime. Wahl persistiert in localStorage.
-       Normaler Besucher sieht das Widget nie.
+       FONT-PICKER (nur sichtbar bei ?fonts=picker — bleibt erhalten)
        ============================================================ -->
   <aside class="font-picker" id="font-picker" hidden aria-label="Menü-Schrift wählen">
     <p class="font-picker__title">Menü-Schrift</p>

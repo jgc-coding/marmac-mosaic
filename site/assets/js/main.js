@@ -1,25 +1,21 @@
 /* ============================================================
-   MarMac-Mosaic — main.js (v2)
-   Vanilla JS. Module:
-     1. Scroll-Reveal für [data-reveal]
-     2. Submenu-Toggle (Mobile: Tap; Desktop: CSS-Hover)
-     3. Tab- + Karussell-Controller (Render aus window.WORKS,
-        prev/next, Swipe, Tastatur, leere Kategorie)
-     4. Detail-Overlay (ersetzt Lightbox; mit Animations-Slot)
-     5. Kontakt-Form-Stub mit DSGVO-Validierung
-     6. Font-Switcher (URL-Param ?fonts=picker + localStorage)
-     7. Reduced-Motion-Handling
+   MarMac-Mosaic — main.js (v3)
+   Module:
+     1. i18n init + Sprachschalter
+     2. Scroll-Reveal für [data-reveal]
+     3. Top-Nav-Reveal (Nav erscheint smooth nach dem Hero)
+     4. Submenu-Toggle
+     5. Tab- + Karussell-Controller + Auto-Advance
+     6. Detail-Overlay
+     7. Kontakt-Form-Stub + DSGVO
+     8. Font-Switcher (URL-Param ?fonts=picker)
+     9. Reduced-Motion
 
    Animations-Slot-Doku (Briefing 8):
-   - Pro Werk kann in works.js ein "animation"-Pfad gesetzt werden
-     (z. B. 'assets/videos/dali-explosion.mp4').
-   - main.js erkennt das → rendert <video autoplay muted controls
-     loop="false"> in .detail__animation und blendet das
-     Side-by-Side-Paar aus.
-   - Empfohlenes Format: MP4 H.264 1080p ≤ 8 MB. Optional WebM
-     als zweite <source>. Lottie nur wenn vektor-basierte Animation
-     vorliegt (für Partikel-/Mosaik-Explosion in der Regel nicht).
-   - Solange "animation": null → Side-by-Side-Fallback.
+     - Pro Werk in works.js ein "animation"-Pfad setzen (MP4 H.264
+       1080p ≤ 8 MB empfohlen, optional WebM zusätzlich).
+     - main.js hängt automatisch <video> in .detail__animation und
+       blendet das Side-by-Side-Paar aus (Klasse .has-animation).
    ============================================================ */
 (() => {
   'use strict';
@@ -27,7 +23,20 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ============================================================
-     1. Scroll-Reveal
+     1. i18n init + Sprachschalter
+     ============================================================ */
+  if (window.I18N) {
+    window.I18N.init();
+    document.querySelectorAll('[data-lang-switch]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const next = (window.I18N.current === 'de') ? 'en' : 'de';
+        window.I18N.setLanguage(next);
+      });
+    });
+  }
+
+  /* ============================================================
+     2. Scroll-Reveal
      ============================================================ */
   const revealTargets = document.querySelectorAll('[data-reveal]');
   if (reduceMotion) {
@@ -47,50 +56,59 @@
   }
 
   /* ============================================================
-     2. Submenu (Mobile-Tap-Toggle, Desktop nutzt CSS-Hover)
+     3. Top-Nav-Reveal — Nav erscheint smooth, sobald der Hero
+     den Viewport verlässt (IntersectionObserver auf #hero).
+     ============================================================ */
+  const nav  = document.getElementById('nav');
+  const hero = document.getElementById('hero');
+  if (nav && hero && !nav.classList.contains('nav--always') && 'IntersectionObserver' in window) {
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => {
+        // Nav erscheint, sobald der Hero zu weniger als ~15 % sichtbar ist.
+        if (entry.intersectionRatio < 0.15) nav.classList.add('is-revealed');
+        else                                nav.classList.remove('is-revealed');
+      },
+      { threshold: [0, 0.15, 0.5, 1] }
+    );
+    heroObserver.observe(hero);
+  } else if (nav) {
+    // Fallback ohne IO: Nav dauerhaft sichtbar.
+    nav.classList.add('is-revealed');
+  }
+
+  /* ============================================================
+     4. Submenu-Toggle
      ============================================================ */
   const submenuToggles = document.querySelectorAll('[data-submenu-toggle]');
 
   function closeAllSubmenus(except) {
-    submenuToggles.forEach(t => {
-      if (t !== except) t.setAttribute('aria-expanded', 'false');
-    });
+    submenuToggles.forEach(t => { if (t !== except) t.setAttribute('aria-expanded', 'false'); });
   }
 
   submenuToggles.forEach(toggle => {
     toggle.addEventListener('click', e => {
-      // Auf Touch / kleinen Viewports: tap toggelt; Default-Anker
-      // (Sprung zu #arbeiten) wird unterdrückt — Submenu öffnet stattdessen.
-      // Auf Desktop mit Hover: CSS macht's; aber wir lassen den
-      // Klick trotzdem zu, damit Tastatur-Nutzer + Touch-Devices
-      // konsistent funktionieren.
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
       if (!isOpen) {
         e.preventDefault();
         closeAllSubmenus(toggle);
         toggle.setAttribute('aria-expanded', 'true');
       } else {
-        // Zweiter Tap → schließt und folgt dem Anker.
         toggle.setAttribute('aria-expanded', 'false');
       }
     });
   });
 
-  // Klick außerhalb der Submenus → alle schließen.
   document.addEventListener('click', e => {
-    if (!e.target.closest('[data-submenu-toggle]') &&
-        !e.target.closest('.submenu')) {
+    if (!e.target.closest('[data-submenu-toggle]') && !e.target.closest('.submenu')) {
       closeAllSubmenus();
     }
   });
-
-  // ESC schließt offene Submenus.
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAllSubmenus();
   });
 
   /* ============================================================
-     3. Tabs + Karussell
+     5. Tabs + Karussell (mit Auto-Advance)
      ============================================================ */
   const tabsContainer = document.querySelector('[data-tabs]');
   const tabs          = tabsContainer ? tabsContainer.querySelectorAll('[data-category]') : [];
@@ -100,31 +118,46 @@
   const nextBtn       = document.querySelector('[data-carousel-next]');
   const dotsContainer = document.querySelector('[data-carousel-dots]');
   const emptyEl       = document.querySelector('[data-carousel-empty]');
-  const categoryAnchors = document.querySelectorAll('[data-category]'); // Tabs + Submenu
+  const categoryAnchors = document.querySelectorAll('[data-category]');
 
+  const AUTO_ADVANCE_MS = 6000;
   let currentCategory = 'ikonen';
   let currentIndex    = 0;
   let slidesCount     = 0;
+  let autoTimer       = null;
+  let autoStopped     = false; // Nach erster manueller Interaktion: dauerhaft aus.
+
+  function t(key, fallback) {
+    return (window.I18N && window.I18N.t(key)) || fallback;
+  }
+
+  // Lokalisierte Werk-Beschreibung holen
+  function workDesc(work) {
+    if (window.I18N && window.I18N.current === 'en' && work.desc_en) return work.desc_en;
+    return work.desc;
+  }
 
   function renderSlide(work) {
-    // Polaroid-Pair-Slide. Klick auf ein Bild öffnet Detail-Overlay.
+    const desc = workDesc(work);
+    const labelOriginal = t('detail.original', 'Originalfoto');
+    const labelMosaic   = t('detail.mosaic',   'Mosaik');
     return `
       <div class="slide" data-work-id="${work.id}">
         <div class="slide__pair">
           <figure class="slide__side slide__side--original">
-            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — Detailansicht öffnen">
-              <img src="${work.original}" alt="Originalfoto: ${work.title}" loading="lazy" />
+            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelOriginal}">
+              <img src="${work.original}" alt="${labelOriginal}: ${work.title}" loading="lazy" />
             </button>
           </figure>
           <figure class="slide__side slide__side--mosaic">
-            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — Detailansicht öffnen">
-              <img src="${work.mosaic}" alt="Mosaik: ${work.title}, handgesetzt von Martina" loading="lazy" />
+            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelMosaic}">
+              <img src="${work.mosaic}" alt="${labelMosaic}: ${work.title}" loading="lazy" />
             </button>
           </figure>
         </div>
         <div class="slide__caption">
           <h3 class="slide__title">${work.title}</h3>
-          <p class="slide__desc">${work.desc}</p>
+          <p class="slide__desc">${desc}</p>
         </div>
       </div>
     `;
@@ -137,8 +170,8 @@
       const dot = document.createElement('button');
       dot.className = 'carousel__dot' + (i === 0 ? ' is-active' : '');
       dot.type = 'button';
-      dot.setAttribute('aria-label', `Werk ${i + 1} anzeigen`);
-      dot.addEventListener('click', () => goTo(i));
+      dot.setAttribute('aria-label', `Werk ${i + 1}`);
+      dot.addEventListener('click', () => { stopAuto(); goTo(i); });
       dotsContainer.appendChild(dot);
     }
   }
@@ -147,26 +180,39 @@
     if (!viewport || !track) return;
     const w = viewport.offsetWidth;
     track.style.setProperty('--carousel-offset', `-${currentIndex * w}px`);
-
-    // Dots aktualisieren
     if (dotsContainer) {
       dotsContainer.querySelectorAll('.carousel__dot').forEach((d, i) => {
         d.classList.toggle('is-active', i === currentIndex);
       });
     }
-
-    // Buttons: an Rändern deaktivieren
-    if (prevBtn) prevBtn.disabled = currentIndex === 0;
-    if (nextBtn) nextBtn.disabled = currentIndex >= slidesCount - 1;
+    // Buttons NICHT mehr deaktivieren — Karussell wraps endlos durch.
+    // (Mit Auto-Advance soll der Nutzer manuell ebenfalls beliebig vor/zurück.)
+    if (prevBtn) prevBtn.disabled = false;
+    if (nextBtn) nextBtn.disabled = false;
   }
 
   function goTo(i) {
-    currentIndex = Math.max(0, Math.min(i, slidesCount - 1));
+    if (slidesCount === 0) return;
+    // Wrap-around: i wird modulo slidesCount.
+    currentIndex = ((i % slidesCount) + slidesCount) % slidesCount;
     updateOffset();
   }
 
   function next() { goTo(currentIndex + 1); }
   function prev() { goTo(currentIndex - 1); }
+
+  function startAuto() {
+    if (autoStopped || reduceMotion || slidesCount < 2) return;
+    stopAutoTimer();
+    autoTimer = setInterval(() => next(), AUTO_ADVANCE_MS);
+  }
+  function stopAutoTimer() {
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  }
+  function stopAuto() {
+    autoStopped = true;
+    stopAutoTimer();
+  }
 
   function setCategory(cat) {
     if (!window.WORKS || !window.WORKS[cat]) return;
@@ -175,7 +221,6 @@
     slidesCount = works.length;
     currentIndex = 0;
 
-    // Tabs aktualisieren
     tabs.forEach(t => {
       const active = t.getAttribute('data-category') === cat;
       t.classList.toggle('is-active', active);
@@ -183,12 +228,12 @@
     });
 
     if (slidesCount === 0) {
-      // Leere Kategorie → Track ausblenden, Placeholder zeigen
       if (track) track.innerHTML = '';
       if (emptyEl) emptyEl.hidden = false;
       if (prevBtn) prevBtn.hidden = true;
       if (nextBtn) nextBtn.hidden = true;
       if (dotsContainer) dotsContainer.innerHTML = '';
+      stopAutoTimer();
       return;
     }
 
@@ -199,42 +244,41 @@
     track.innerHTML = works.map(renderSlide).join('');
     renderDots(slidesCount);
     updateOffset();
+    startAuto();
   }
 
-  // Tabs: Klick filtert
+  // Tab-Click filtert (gilt als manuelle Interaktion → Auto stoppt).
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
+      stopAuto();
       setCategory(tab.getAttribute('data-category'));
     });
   });
 
-  // Submenu-Anchor: Klick filtert + scrollt
+  // Submenu-Anchor: Klick filtert + scrollt.
   categoryAnchors.forEach(a => {
-    if (a.tagName !== 'A') return; // Tabs sind <button>, schon abgedeckt
-    a.addEventListener('click', e => {
+    if (a.tagName !== 'A') return;
+    a.addEventListener('click', () => {
       const cat = a.getAttribute('data-category');
       if (cat) {
+        stopAuto();
         setCategory(cat);
         closeAllSubmenus();
-        // Default-Verhalten (Sprung zu #arbeiten) bleibt erhalten.
       }
     });
   });
 
-  // Prev/Next-Buttons + Tastatur
-  if (prevBtn) prevBtn.addEventListener('click', prev);
-  if (nextBtn) nextBtn.addEventListener('click', next);
+  if (prevBtn) prevBtn.addEventListener('click', () => { stopAuto(); prev(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { stopAuto(); next(); });
 
   if (viewport) {
     viewport.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); stopAuto(); next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); stopAuto(); prev(); }
     });
-    // Karussell soll fokussierbar sein (Tastatur-Navigation).
     viewport.setAttribute('tabindex', '0');
   }
 
-  // Swipe (Touch + Pointer)
   let pointerStartX = null;
   function onPointerDown(e) {
     pointerStartX = (e.touches ? e.touches[0].clientX : e.clientX);
@@ -245,6 +289,7 @@
     const dx = endX - pointerStartX;
     pointerStartX = null;
     if (Math.abs(dx) > 50) {
+      stopAuto();
       if (dx < 0) next();
       else        prev();
     }
@@ -254,20 +299,37 @@
     viewport.addEventListener('touchend',   onPointerUp,   { passive: true });
   }
 
-  // Resize: Offset neu berechnen (Slide-Breite ändert sich).
+  // Auto-Advance pausieren wenn der Tab im Hintergrund ist (höflich
+  // gegenüber CPU & Akku), wieder anlaufen wenn sichtbar — solange
+  // der Nutzer nicht manuell interagiert hat.
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAutoTimer();
+    else if (!autoStopped) startAuto();
+  });
+
   let resizeT = null;
   window.addEventListener('resize', () => {
     clearTimeout(resizeT);
     resizeT = setTimeout(updateOffset, 100);
   });
 
-  // Initial-Render mit Default-Kategorie
+  // Initial-Render
   if (track && window.WORKS) {
     setCategory(currentCategory);
   }
 
+  // Beim Sprachwechsel ruft i18n.setLanguage() refreshCarousel()
+  // auf, damit die Werk-Beschreibungen + Labels neu rendern.
+  window.refreshCarousel = function () {
+    if (slidesCount > 0) {
+      const works = window.WORKS[currentCategory] || [];
+      track.innerHTML = works.map(renderSlide).join('');
+      updateOffset();
+    }
+  };
+
   /* ============================================================
-     4. Detail-Overlay (öffnet bei Klick auf Slide-Bild)
+     6. Detail-Overlay
      ============================================================ */
   const detail        = document.getElementById('detail');
   const detailTitle   = detail ? detail.querySelector('[id="detail-title"]') : null;
@@ -293,14 +355,12 @@
 
     detailLastFocus = document.activeElement;
     detailTitle.textContent  = work.title;
-    detailDesc.textContent   = work.desc;
+    detailDesc.textContent   = workDesc(work);
     detailOrig.src           = work.original;
-    detailOrig.alt           = `Originalfoto: ${work.title}`;
+    detailOrig.alt           = `${t('detail.original','Originalfoto')}: ${work.title}`;
     detailMosaic.src         = work.mosaic;
-    detailMosaic.alt         = `Mosaik: ${work.title}`;
+    detailMosaic.alt         = `${t('detail.mosaic','Mosaik')}: ${work.title}`;
 
-    // Animations-Slot: wenn work.animation gesetzt → Video einhängen,
-    // Side-by-Side wird per CSS (.has-animation) ausgeblendet.
     detailAnim.innerHTML = '';
     if (work.animation) {
       const v = document.createElement('video');
@@ -317,6 +377,7 @@
 
     detail.hidden = false;
     document.body.style.overflow = 'hidden';
+    stopAuto(); // Auto-Advance stoppt beim Öffnen des Detail-Overlays.
     if (detailClose) detailClose.focus();
   }
 
@@ -333,7 +394,6 @@
     }
   }
 
-  // Klick auf Slide-Bild öffnet Detail (Event-Delegation)
   document.addEventListener('click', e => {
     const trigger = e.target.closest('[data-open-detail]');
     if (trigger) {
@@ -341,7 +401,6 @@
       openDetail(trigger.getAttribute('data-open-detail'));
       return;
     }
-    // Klick auf Backdrop (außerhalb .detail__inner) schließt
     if (detail && !detail.hidden && e.target === detail) closeDetail();
   });
 
@@ -351,7 +410,7 @@
   });
 
   /* ============================================================
-     5. Kontakt-Form-Stub mit DSGVO-Validierung
+     7. Kontakt-Form-Stub + DSGVO
      ============================================================ */
   const form = document.getElementById('contact-form');
   const formNote = document.getElementById('contact-form-note');
@@ -360,18 +419,16 @@
       e.preventDefault();
       const dsgvo = form.querySelector('input[name="dsgvo"]');
       if (dsgvo && !dsgvo.checked) {
-        formNote.textContent = 'Bitte bestätige die Datenschutzerklärung, um fortzufahren.';
-        formNote.style.color = ''; // default
+        formNote.textContent = t('contact.note.dsgvo', 'Bitte bestätige die Datenschutzerklärung, um fortzufahren.');
         dsgvo.focus();
         return;
       }
-      formNote.textContent =
-        'Vielen Dank! Das Formular ist noch nicht angebunden — bitte nutze vorerst E-Mail oder WhatsApp rechts.';
+      formNote.textContent = t('contact.note.thanks', 'Vielen Dank! Das Formular ist noch nicht angebunden.');
     });
   }
 
   /* ============================================================
-     6. Font-Switcher (URL-Param ?fonts=picker + localStorage)
+     8. Font-Switcher (URL-Param ?fonts=picker)
      ============================================================ */
   const FONT_MAP = {
     italianno: { stack: '"Italianno", "Allura", cursive',                       weight: 400, letter: '0.02em' },
@@ -393,25 +450,20 @@
       root.setProperty('--font-menu-weight', String(config.weight));
       root.setProperty('--font-menu-letter', config.letter);
     }
-    // Picker-Buttons: aktive Variante markieren
     document.querySelectorAll('.font-picker button[data-font]').forEach(b => {
       b.classList.toggle('is-active', b.getAttribute('data-font') === key);
     });
   }
 
-  // 1. Persistierte Wahl beim Laden anwenden
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && FONT_MAP[stored]) applyMenuFont(stored);
-  } catch (_) { /* localStorage blockiert — ignorieren */ }
+  } catch (_) {}
 
-  // 2. Picker-Widget bei ?fonts=picker sichtbar machen
   const picker = document.getElementById('font-picker');
   if (picker) {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('fonts') === 'picker') {
-      picker.hidden = false;
-    }
+    if (params.get('fonts') === 'picker') picker.hidden = false;
     picker.querySelectorAll('button[data-font]').forEach(btn => {
       btn.addEventListener('click', () => {
         const key = btn.getAttribute('data-font');
@@ -419,13 +471,5 @@
         try { localStorage.setItem(STORAGE_KEY, key); } catch (_) {}
       });
     });
-  }
-
-  /* ============================================================
-     7. Reduced-Motion-Cleanup
-     ============================================================ */
-  if (reduceMotion && track) {
-    // Karussell wechselt ohnehin nur per User-Interaktion (kein Auto-Play),
-    // also nichts weiter zu tun. Transition wird via CSS bereits unterdrückt.
   }
 })();
