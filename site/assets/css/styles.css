@@ -335,49 +335,51 @@ body[data-menu-style="solid"] .menu__link:focus {
   box-shadow: 0 6px 14px -8px rgba(42, 31, 23, 0.4);
 }
 
-/* --- Variante 5: LINES (dezenter Strich oben UND unten) ---
-   Linien stehen leicht über die Item-Breite hinaus, aber die
-   Gap zwischen Items ist größer als der Überhang → Lücken
-   zwischen den Linien-Paaren bleiben sichtbar.
-   Padding-block höher als bei "underline", damit Strich und
-   Schrift etwas mehr Luft zwischeneinander haben. */
+/* --- Variante 5: LINES (durchgehende Striche oben + unten) ---
+   Statt pro Item: EINE Linie oben, EINE unten, beide durch das
+   gesamte Menü, links + rechts deutlich überstehend (3 rem je
+   Seite, also doppelt so weit wie der vorherige Pro-Item-Überhang).
+   Permanent sichtbar — kein "Aktivieren" bei Hover. */
 body[data-menu-style="lines"] .menu__link {
   background: transparent;
   border: none;
   border-radius: 0;
-  padding: 0.85rem 0.25rem;
+  padding: 0.5rem 0.4rem;
   color: var(--color-ink);
 }
+/* Etwaige Pro-Item-Pseudos der vorherigen Lines-Variante deaktivieren. */
 body[data-menu-style="lines"] .menu__link::before,
 body[data-menu-style="lines"] .menu__link::after {
-  content: "";
-  position: absolute;
-  left: -0.85rem;
-  right: -0.85rem;
-  height: 1px;
-  background: var(--color-ink-soft);
-  opacity: 0.5;
-  transition: background-color 0.25s var(--ease),
-              opacity 0.25s var(--ease),
-              height 0.25s var(--ease);
-}
-body[data-menu-style="lines"] .menu__link::before { top: 0; }
-body[data-menu-style="lines"] .menu__link::after  { bottom: 0; }
-body[data-menu-style="lines"] .menu__link:hover::before,
-body[data-menu-style="lines"] .menu__link:hover::after,
-body[data-menu-style="lines"] .menu__link:focus::before,
-body[data-menu-style="lines"] .menu__link:focus::after {
-  background: var(--color-accent);
-  opacity: 1;
-  height: 1.5px;
+  content: none;
 }
 body[data-menu-style="lines"] .menu__link:hover,
 body[data-menu-style="lines"] .menu__link:focus {
   color: var(--color-accent-dk);
 }
-/* Etwas mehr Gap, damit zwischen den Strich-Paaren sichtbare Lücken
-   bleiben (Linien sollen nicht durchgehen). */
-body[data-menu-style="lines"] .menu { gap: clamp(1.25rem, 3vw, 2.25rem); }
+
+/* Durchgehende Linien am Menü-Container. */
+body[data-menu-style="lines"] .menu {
+  position: relative;
+  padding-block: 0.85rem;
+}
+body[data-menu-style="lines"] .menu::before,
+body[data-menu-style="lines"] .menu::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  /* 6 rem Überhang gesamt = je 3 rem links + rechts → grob doppelt
+     so weit wie die vorherige Variante (0,85 rem pro Seite).
+     max-width verhindert Horizontal-Scroll auf engen Viewports. */
+  width: calc(100% + 6rem);
+  max-width: 100vw;
+  height: 1px;
+  background: var(--color-ink-soft);
+  opacity: 0.55;
+  pointer-events: none;
+}
+body[data-menu-style="lines"] .menu::before { top: 0; }
+body[data-menu-style="lines"] .menu::after  { bottom: 0; }
 
 /* Submenu — Dropdown. Default: nach unten. Variante .submenu--up
    öffnet nach oben (im Hero-Bereich, damit es nicht abgeschnitten wird). */
@@ -526,14 +528,14 @@ body[data-menu-style="lines"] .menu { gap: clamp(1.25rem, 3vw, 2.25rem); }
   position: relative;
   width: 100%;
   min-height: 100svh;
-  /* Symmetrischer Gradient: surface → bg (mitte) → surface.
-     Start und Ende = intro-bg (surface), sodass der Übergang von
-     Hero zur nächsten Section nahtlos ist — kein Farbsprung mehr
-     am Mobile-Viewport-Boden. */
+  /* Asymmetrischer Gradient: hell oben (surface) → warmes Creme
+     (bg) in der Mitte → wärmerer Sand (#EFE5D5) unten. Bewusster
+     Wechsel zur Intro-Section unten — die Farbkante markiert dort
+     die Grenze zwischen Hero und nächstem Bereich. */
   background: linear-gradient(180deg,
     var(--color-surface) 0%,
-    var(--color-bg)      50%,
-    var(--color-surface) 100%);
+    var(--color-bg)      55%,
+    #EFE5D5              100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -546,6 +548,20 @@ body[data-menu-style="lines"] .menu { gap: clamp(1.25rem, 3vw, 2.25rem); }
   /* overflow: visible, damit WindSong-Schwungflourishes (z. B. das
      "c" am Wortende) nicht beschnitten werden. */
   overflow: visible;
+}
+
+/* Visuelle Grenze zwischen Hero und Intro: feiner Schatten direkt
+   unter dem Hero-Boden — markiert den Wechsel, ohne aufdringlich
+   zu wirken. Funktioniert auf Desktop & Mobile gleichermaßen. */
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-line);
+  pointer-events: none;
 }
 
 /* Brand-Zeilenumbruch nur auf Mobile. Default versteckt. */
@@ -617,11 +633,14 @@ body[data-menu-style="lines"] .menu { gap: clamp(1.25rem, 3vw, 2.25rem); }
 .menu--hero .submenu a:hover,
 .menu--hero .submenu a:focus { background: var(--color-bg); color: var(--color-accent-dk); }
 
-/* Mobile-Anpassung: Hero darf etwas kompakter sein. */
+/* Mobile-Anpassung: Hero füllt vollen Viewport (min-height 100svh),
+   damit der Farbverlauf wirkt und der Übergang zur nächsten Section
+   beim Scrollen als bewusste Grenze sichtbar wird (nicht schon im
+   Initial-View). */
 @media (max-width: 767px) {
   .hero {
-    min-height: 90svh;
-    padding: clamp(5rem, 14svh, 7rem) 1rem clamp(3.5rem, 9svh, 5rem);
+    min-height: 100svh;
+    padding: clamp(5rem, 14svh, 7rem) 1rem clamp(4rem, 10svh, 6rem);
   }
   .hero__title { font-size: clamp(2.8rem, 14vw, 4.5rem); }
   .hero__subline { font-size: clamp(1rem, 4.5vw, 1.3rem); }
