@@ -3,237 +3,186 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>MarMac-Mosaic — Personalisierte Mosaikkunst von Martina</title>
-  <meta name="description" content="MarMac-Mosaic: handgefertigte, personalisierte Mosaikbilder aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
+  <title>MarMac-Mosaic — Personalisierte Mosaik-Porträts von Martina</title>
+  <meta name="description" content="MarMac-Mosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
   <meta name="theme-color" content="#F5EFE6" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="MarMac-Mosaic — Personalisierte Mosaikkunst" />
-  <meta property="og:description" content="Vom Foto zum handgesetzten Mosaik. Werke von Martina." />
+  <meta property="og:title" content="MarMac-Mosaic — Personalisierte Mosaik-Porträts" />
+  <meta property="og:description" content="Vom Foto zum handgesetzten Mosaik. Porträts von Martina." />
   <meta property="og:locale" content="de_DE" />
 
-  <!-- Fonts: WindSong (Display, kursiv) + Cormorant Garamond (Untertitel) + Inter (Body) -->
+  <!-- Fonts:
+       - WindSong: Display (Hero-Subline, Section-Headlines, Top-Logo)
+       - Cormorant Garamond: Fallback / Sub-Headings
+       - Inter: Body
+       - Italianno + Source Sans 3 + Courier Prime:
+         drei Menü-Schriftvarianten (Martinas Wunsch zum Vergleichen),
+         live umschaltbar via ?fonts=picker -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=WindSong:wght@400;500&family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&family=Italianno&family=Source+Sans+3:wght@300;400;500&family=Courier+Prime:wght@400;700&display=swap"
   />
 
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <!-- Reihenfolge: Daten + i18n vor main.js (main.js liest WORKS/I18N). -->
+  <script defer src="assets/js/works.js"></script>
+  <script defer src="assets/js/i18n.js"></script>
   <script defer src="assets/js/main.js"></script>
 </head>
 <body>
   <!-- ============================================================
-       NAV — von Anfang an sichtbar (semi-transparenter Creme-Look
-       mit Backdrop-Blur). Schwebt über dem Hero-Video.
+       1. TOP-NAV — sticky, von Anfang an sichtbar.
+       Logo in WindSong (kursiv-handschriftlich, wie die Headlines).
+       Enthält dieselben Menü-Komponente wie die Hero-Nav.
        ============================================================ -->
   <header class="nav" id="nav" aria-label="Hauptnavigation">
     <div class="nav__inner">
       <a class="nav__brand" href="#top">MarMac-Mosaic</a>
-      <nav class="nav__links">
-        <a href="#arbeiten">Arbeiten</a>
-        <a href="#ueber-mich">Über mich</a>
-        <a href="#kontakt">Kontakt</a>
+      <nav class="menu menu--top">
+        <div class="menu__item menu__item--has-submenu">
+          <a
+            href="#arbeiten"
+            class="menu__link"
+            data-submenu-toggle
+            aria-haspopup="true"
+            aria-expanded="false"
+          >Arbeiten</a>
+          <ul class="submenu" role="menu">
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen">Ikonen</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits">Persönliche Porträts</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere">Haustiere</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes">Verschiedenes</a></li>
+          </ul>
+        </div>
+        <a class="menu__link" href="#ueber-mich">Über mich</a>
+        <a class="menu__link" href="#kontakt">Kontakt</a>
       </nav>
     </div>
   </header>
 
   <main id="top">
     <!-- ============================================================
-         HERO — nur das Loop-Video. Kein Text, kein Untertitel.
+         2. HERO — statischer Mosaik-Schriftzug + zentrales Menü.
+         Kein Video mehr (v1 via Tag v1-with-video wiederherstellbar).
          ============================================================ -->
-    <section class="hero" id="hero" aria-label="Markenvideo MarMac-Mosaic">
-      <video
-        class="hero__video"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-        aria-hidden="true"
-      >
-        <source src="assets/video/hero.mp4" type="video/mp4" />
-      </video>
+    <section class="hero" id="hero" aria-label="MarMac-Mosaic">
+      <img
+        class="hero__image"
+        src="assets/images/hero-marmac-mosaic.png"
+        alt="MarMac-Mosaic — Schriftzug aus farbigen Mosaiksteinen auf Holz"
+        fetchpriority="high"
+      />
+      <p class="hero__subline">Personalisierte Mosaik-Porträts</p>
 
-      <a class="hero__scroll" href="#arbeiten" aria-label="Weiter scrollen">
-        <span class="hero__chevron" aria-hidden="true">▾</span>
-      </a>
+      <!-- Zentrale Einstiegs-Navigation: erscheint sichtbar unter
+           dem Schriftzug, identisch zur Top-Nav. -->
+      <nav class="menu menu--hero" aria-label="Einstiegsnavigation">
+        <div class="menu__item menu__item--has-submenu">
+          <a
+            href="#arbeiten"
+            class="menu__link"
+            data-submenu-toggle
+            aria-haspopup="true"
+            aria-expanded="false"
+          >Arbeiten</a>
+          <ul class="submenu" role="menu">
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen">Ikonen</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits">Persönliche Porträts</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere">Haustiere</a></li>
+            <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes">Verschiedenes</a></li>
+          </ul>
+        </div>
+        <a class="menu__link" href="#ueber-mich">Über mich</a>
+        <a class="menu__link" href="#kontakt">Kontakt</a>
+      </nav>
     </section>
 
     <!-- ============================================================
-         ARBEITEN — Vorher/Nachher-Paare.
-         Echte Bilder beim Dalí-Werk, "Mosaik folgt"-Platzhalter
-         (CSS-Tile-Grid) bei den anderen beiden.
+         3. INTRO — "Vom Foto zum Mosaik" (Erklärtext, Platzhalter).
+         Martina liefert finalen Text nach. Wort "Porträt" soll
+         laut Briefing 6 prominent vorkommen.
          ============================================================ -->
-    <section class="section section--works" id="arbeiten">
-      <div class="container">
+    <section class="section section--intro" id="intro">
+      <div class="container intro">
         <header class="section__head" data-reveal>
-          <p class="section__eyebrow">Bisherige Arbeiten</p>
-          <h2 class="section__title">Vom Foto zum Mosaik</h2>
-          <p class="section__lede">
-            Jedes Werk beginnt mit einem persönlichen Motiv — und endet
-            als handgesetztes Mosaik aus tausenden Steinen.
-          </p>
+          <p class="section__eyebrow">Vom Foto zum Mosaik</p>
+          <h2 class="section__title">Dein Porträt — Stein für Stein.</h2>
         </header>
-
-        <!--
-          Künstlerische Anordnung: drei Paare, alternierend
-          links/rechts versetzt und vertikal überlappend gestaffelt.
-          CSS (.work--left / .work--right / .work--tilt-*) übernimmt
-          die Komposition. Auf Mobile fällt alles zentriert untereinander.
-        -->
-        <div class="works">
-          <!-- Werk 1: Salvador Dalí -->
-          <article class="work work--left work--tilt-a">
-            <div class="work__pair">
-              <figure class="work__side">
-                <button
-                  type="button"
-                  class="work__image"
-                  data-lightbox-src="assets/images/works/dali-original.png"
-                  data-lightbox-alt="Originalfoto: Salvador Dalí"
-                >
-                  <img
-                    src="assets/images/works/dali-original.png"
-                    alt="Originalfoto: Salvador Dalí, Schwarzweiß-Porträt"
-                    loading="lazy"
-                  />
-                </button>
-                <figcaption class="work__label">Originalfoto</figcaption>
-              </figure>
-
-              <div class="work__arrow" aria-hidden="true">
-                <span class="work__arrow--h">→</span>
-                <span class="work__arrow--v">↓</span>
-              </div>
-
-              <figure class="work__side">
-                <button
-                  type="button"
-                  class="work__image"
-                  data-lightbox-src="assets/images/works/dali-mosaic.png"
-                  data-lightbox-alt="Mosaik: Salvador Dalí, handgesetzt von Martina"
-                >
-                  <img
-                    src="assets/images/works/dali-mosaic.png"
-                    alt="Mosaik: Salvador Dalí, handgesetzt von Martina"
-                    loading="lazy"
-                  />
-                </button>
-                <figcaption class="work__label">Mosaik</figcaption>
-              </figure>
-            </div>
-            <div class="work__caption">
-              <h3 class="work__title">Salvador Dalí</h3>
-              <p class="work__desc">Porträt-Mosaik in Schwarz, Weiß und Grautönen.</p>
-            </div>
-          </article>
-
-          <!-- Werk 2: Elvis Presley -->
-          <article class="work work--right work--tilt-b">
-            <div class="work__pair">
-              <figure class="work__side">
-                <button
-                  type="button"
-                  class="work__image"
-                  data-lightbox-src="assets/images/works/elvis-original.webp"
-                  data-lightbox-alt="Originalfoto: Elvis Presley"
-                >
-                  <img
-                    src="assets/images/works/elvis-original.webp"
-                    alt="Originalfoto: Elvis Presley, Schwarzweiß"
-                    loading="lazy"
-                  />
-                </button>
-                <figcaption class="work__label">Originalfoto</figcaption>
-              </figure>
-
-              <div class="work__arrow" aria-hidden="true">
-                <span class="work__arrow--h">→</span>
-                <span class="work__arrow--v">↓</span>
-              </div>
-
-              <figure class="work__side">
-                <button
-                  type="button"
-                  class="work__image"
-                  data-lightbox-src="assets/images/works/elvis-mosaic.jpg"
-                  data-lightbox-alt="Mosaik: Elvis Presley, handgesetzt von Martina"
-                >
-                  <img
-                    src="assets/images/works/elvis-mosaic.jpg"
-                    alt="Mosaik: Elvis Presley, handgesetzt von Martina"
-                    loading="lazy"
-                  />
-                </button>
-                <figcaption class="work__label">Mosaik</figcaption>
-              </figure>
-            </div>
-            <div class="work__caption">
-              <h3 class="work__title">Elvis Presley</h3>
-              <p class="work__desc">Porträt-Mosaik auf tiefrotem Grund.</p>
-            </div>
-          </article>
-
-          <!-- Werk 3: Frida Kahlo -->
-          <article class="work work--left work--tilt-c">
-            <div class="work__pair">
-              <figure class="work__side">
-                <button
-                  type="button"
-                  class="work__image"
-                  data-lightbox-src="assets/images/works/frida-original.jpg"
-                  data-lightbox-alt="Vorlage: Frida Kahlo"
-                >
-                  <img
-                    src="assets/images/works/frida-original.jpg"
-                    alt="Vorlage: Frida Kahlo, farbige Variante"
-                    loading="lazy"
-                  />
-                </button>
-                <figcaption class="work__label">Originalfoto</figcaption>
-              </figure>
-
-              <div class="work__arrow" aria-hidden="true">
-                <span class="work__arrow--h">→</span>
-                <span class="work__arrow--v">↓</span>
-              </div>
-
-              <figure class="work__side">
-                <button
-                  type="button"
-                  class="work__image"
-                  data-lightbox-src="assets/images/works/frida-mosaic.jpg"
-                  data-lightbox-alt="Mosaik: Frida Kahlo, handgesetzt von Martina"
-                >
-                  <img
-                    src="assets/images/works/frida-mosaic.jpg"
-                    alt="Mosaik: Frida Kahlo, handgesetzt von Martina"
-                    loading="lazy"
-                  />
-                </button>
-                <figcaption class="work__label">Mosaik</figcaption>
-              </figure>
-            </div>
-            <div class="work__caption">
-              <h3 class="work__title">Frida Kahlo</h3>
-              <p class="work__desc">Farbiges Porträt mit Blumenkrone.</p>
-            </div>
-          </article>
+        <div class="intro__body" data-reveal>
+          <p>
+            Aus einem persönlichen Foto entsteht ein handgesetztes Mosaik-Porträt
+            — sei es eine geliebte Person, ein Haustier oder eine Ikone, die dich
+            begleitet. Jedes Werk ist ein Unikat, gefertigt aus tausenden kleinen
+            Glas-, Keramik- und Natursteinen.
+          </p>
+          <p>
+            <em>(Dieser Text ist ein Platzhalter und wird später durch Martinas
+            eigene Worte ersetzt.)</em>
+          </p>
         </div>
       </div>
     </section>
 
     <!-- ============================================================
-         ÜBER MICH — Portrait-Platzhalter (CSS) + Text-Platzhalter.
+         4. BISHERIGE ARBEITEN — Tabs (Subkategorien) + Karussell.
+         Das Karussell rendert sich aus window.WORKS pro Kategorie.
+         Layout pro Slide: überlappendes Polaroid-Paar (Vorlage +
+         Mosaik), wie bisher die Mobile-Lösung — jetzt überall.
+         ============================================================ -->
+    <section class="section section--works" id="arbeiten">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <p class="section__eyebrow">Bisherige Arbeiten</p>
+          <h2 class="section__title">Eine Auswahl</h2>
+        </header>
+
+        <!-- Subkategorien-Tabs. Initial "Ikonen" aktiv. -->
+        <nav class="tabs" role="tablist" aria-label="Werk-Kategorien" data-tabs>
+          <button class="tab is-active" role="tab" aria-selected="true"  data-category="ikonen">Ikonen</button>
+          <button class="tab"            role="tab" aria-selected="false" data-category="portraits">Persönliche Porträts</button>
+          <button class="tab"            role="tab" aria-selected="false" data-category="haustiere">Haustiere</button>
+          <button class="tab"            role="tab" aria-selected="false" data-category="verschiedenes">Verschiedenes</button>
+        </nav>
+
+        <!-- Karussell. JS füllt .carousel__track aus window.WORKS. -->
+        <div class="carousel" data-carousel>
+          <button class="carousel__btn carousel__btn--prev" aria-label="Vorheriges Werk" data-carousel-prev>‹</button>
+          <div class="carousel__viewport" data-carousel-viewport>
+            <div class="carousel__track" data-carousel-track>
+              <!-- Slides werden zur Laufzeit gerendert -->
+            </div>
+          </div>
+          <button class="carousel__btn carousel__btn--next" aria-label="Nächstes Werk" data-carousel-next>›</button>
+
+          <!-- Slide-Indikatoren (Punkte unter dem Karussell). -->
+          <div class="carousel__dots" data-carousel-dots aria-hidden="true"></div>
+        </div>
+
+        <!-- Wird sichtbar, wenn aktive Kategorie leer ist. -->
+        <p class="carousel__empty" data-carousel-empty hidden>
+          <span class="carousel__empty-text">Bald hier zu sehen.</span>
+        </p>
+
+        <!-- Hinweis-Subtext: Beispielwerke nicht zum Verkauf (Briefing 3.5). -->
+        <p class="works__note" data-reveal>
+          Die hier gezeigten Werke der Kategorie <em>Ikonen</em> dienen als Inspiration
+          — sie sind nicht zum Verkauf. Gerne fertige ich dir dein eigenes
+          Mosaik-Porträt: <a href="#kontakt">Kontaktiere mich</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         5. ÜBER MICH — Portrait-Platzhalter + Text-Platzhalter.
+         Inhalt + Foto liefert Martina nach.
          ============================================================ -->
     <section class="section section--about" id="ueber-mich">
       <div class="container about">
         <div class="about__portrait" data-reveal aria-hidden="true">
-          <!-- Portrait wird später durch ein echtes Bild ersetzt;
-               vorerst ein dezentes Mosaik-Tile-Grid aus CSS. -->
           <div class="tile-grid tile-grid--portrait"></div>
         </div>
 
@@ -241,13 +190,13 @@
           <p class="section__eyebrow">Über mich</p>
           <h2 class="section__title">Hinter jedem Stein steckt Geduld.</h2>
           <p>
-            Mein Name ist Martina. Seit Jahren setze ich Mosaike aus
-            Glas-, Keramik- und Natursteinen. Jedes Werk entsteht in Handarbeit
-            — Stein für Stein, oft über Wochen hinweg.
+            Mein Name ist Martina. Seit Jahren setze ich Mosaike aus Glas-,
+            Keramik- und Natursteinen. Jedes Werk entsteht in Handarbeit —
+            Stein für Stein, oft über Wochen hinweg.
           </p>
           <p>
             Was mich am Mosaik fasziniert: aus tausenden winzigen Teilen
-            entsteht ein einziges großes Bild. Genau wie Erinnerungen,
+            entsteht ein einziges großes Porträt. Genau wie Erinnerungen,
             die ich für meine Kundinnen und Kunden in dauerhafte Kunst
             verwandle.
           </p>
@@ -260,13 +209,15 @@
     </section>
 
     <!-- ============================================================
-         KONTAKT — Formular links, direkte Kontaktwege rechts.
+         6. KONTAKT — Formular (mit DSGVO-Häkchen) + Direkt-Links.
+         Headline mit "Mosaik-Porträt" (Briefing 4).
+         Instagram-Slot vorbereitet.
          ============================================================ -->
     <section class="section section--contact" id="kontakt">
       <div class="container">
         <header class="section__head" data-reveal>
           <p class="section__eyebrow">Kontakt</p>
-          <h2 class="section__title">Lass uns dein Mosaik besprechen.</h2>
+          <h2 class="section__title">Lass uns dein Mosaik-Porträt besprechen.</h2>
           <p class="section__lede">
             Schreib mir, welches Motiv dir vorschwebt — oder nutze direkt
             E-Mail oder WhatsApp.
@@ -274,7 +225,8 @@
         </header>
 
         <div class="contact">
-          <!-- Formular: aktuell ohne Backend. JS fängt Submit ab. -->
+          <!-- Formular: aktuell ohne Backend. JS fängt Submit ab und
+               prüft die DSGVO-Checkbox. -->
           <form class="contact__form" id="contact-form" data-reveal novalidate>
             <label class="field">
               <span class="field__label">Name</span>
@@ -291,9 +243,16 @@
               <textarea name="message" rows="5" required></textarea>
             </label>
 
-            <button type="submit" class="btn btn--primary">
-              Anfrage senden
-            </button>
+            <!-- DSGVO-Häkchen mit Link zur Datenschutzerklärung (Briefing 10). -->
+            <label class="field field--checkbox">
+              <input type="checkbox" name="dsgvo" required />
+              <span>
+                Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a>
+                gelesen und stimme zu.
+              </span>
+            </label>
+
+            <button type="submit" class="btn btn--primary">Anfrage senden</button>
 
             <p class="contact__form-note" id="contact-form-note" role="status" aria-live="polite"></p>
           </form>
@@ -318,13 +277,15 @@
               </span>
             </a>
 
-            <!--
-              Optional: Instagram-Link.
-              <a class="btn btn--ghost" href="https://instagram.com/" target="_blank" rel="noopener">
-                <span class="btn__icon" aria-hidden="true">◎</span>
-                <span><span class="btn__label">Instagram</span><span class="btn__sub">@marmac.mosaic</span></span>
-              </a>
-            -->
+            <!-- Instagram-Slot — Container ist da, Link folgt von Martina (Briefing 4).
+                 Wenn href gesetzt wird, einfach den hidden-Attribut entfernen. -->
+            <a class="btn btn--ghost" href="#" hidden data-instagram-slot target="_blank" rel="noopener">
+              <span class="btn__icon" aria-hidden="true">◎</span>
+              <span>
+                <span class="btn__label">Instagram</span>
+                <span class="btn__sub">@marmac.mosaic</span>
+              </span>
+            </a>
 
             <p class="contact__hint">
               Hinweis: Alle Kontaktdaten sind Platzhalter und werden später
@@ -337,13 +298,13 @@
   </main>
 
   <!-- ============================================================
-       FOOTER
+       7. FOOTER — mit Links auf Impressum + Datenschutz.
        ============================================================ -->
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
         <p class="footer__name">MarMac-Mosaic</p>
-        <p class="footer__claim">Handgefertigte Mosaikbilder aus deinem Motiv.</p>
+        <p class="footer__claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
       </div>
 
       <nav class="footer__nav" aria-label="Footer-Navigation">
@@ -353,18 +314,58 @@
       </nav>
 
       <div class="footer__legal">
-        <p>Impressum &amp; Datenschutzerklärung folgen.</p>
+        <p><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
         <p class="footer__copy">© 2026 MarMac-Mosaic</p>
       </div>
     </div>
   </footer>
 
   <!-- ============================================================
-       LIGHTBOX — wird von JS befüllt und ein-/ausgeblendet.
+       DETAIL-OVERLAY — öffnet bei Klick auf ein Werk im Karussell.
+       Enthält oben einen Container für die spätere "Explosions-
+       Animation" (extern als MP4/WebM produziert; siehe Briefing 8
+       und Doku in main.js).
+       Fallback solange kein Asset: zeigt Original + Mosaik
+       nebeneinander.
        ============================================================ -->
-  <div class="lightbox" id="lightbox" hidden>
-    <button class="lightbox__close" type="button" aria-label="Schließen">×</button>
-    <img class="lightbox__image" alt="" />
+  <div class="detail" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <button class="detail__close" type="button" aria-label="Schließen">×</button>
+    <div class="detail__inner">
+      <h3 id="detail-title" class="detail__title"></h3>
+
+      <!-- Animations-Slot: JS hängt hier <video> ein, wenn das Werk
+           einen animation-Pfad hat. Andernfalls bleibt der Slot leer
+           und das Side-by-Side darunter wird sichtbar. -->
+      <div class="detail__animation" data-detail-animation></div>
+
+      <div class="detail__pair" data-detail-pair>
+        <figure class="detail__side">
+          <img data-detail-original alt="" />
+          <figcaption>Originalfoto</figcaption>
+        </figure>
+        <figure class="detail__side">
+          <img data-detail-mosaic alt="" />
+          <figcaption>Mosaik</figcaption>
+        </figure>
+      </div>
+
+      <p class="detail__desc" data-detail-desc></p>
+    </div>
   </div>
+
+  <!-- ============================================================
+       FONT-PICKER — schwebendes Widget unten rechts, nur sichtbar
+       bei URL ?fonts=picker. Wechselt die Menü-Schrift live zwischen
+       Italianno (Gabriola-like), Source Sans 3 (Candara-like) und
+       Courier Prime. Wahl persistiert in localStorage.
+       Normaler Besucher sieht das Widget nie.
+       ============================================================ -->
+  <aside class="font-picker" id="font-picker" hidden aria-label="Menü-Schrift wählen">
+    <p class="font-picker__title">Menü-Schrift</p>
+    <button type="button" data-font="italianno" style="font-family: Italianno, cursive;">Aa Italianno</button>
+    <button type="button" data-font="sans"      style="font-family: 'Source Sans 3', sans-serif; font-weight: 300;">Aa Sans Light</button>
+    <button type="button" data-font="courier"   style="font-family: 'Courier Prime', monospace;">Aa Courier</button>
+    <button type="button" data-font="default"   style="font-family: Inter, sans-serif;">Aa Standard</button>
+  </aside>
 </body>
 </html>
