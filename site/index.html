@@ -290,5 +290,18 @@
     <button type="button" data-font="courier"   style="font-family: 'Courier Prime', monospace;">Aa Courier</button>
     <button type="button" data-font="default"   style="font-family: Inter, sans-serif;">Aa Standard</button>
   </aside>
+
+  <!-- ============================================================
+       MENÜ-STIL-PICKER (nur sichtbar bei ?menu=picker)
+       Live-Vergleich von vier Menü-Varianten — Wahl persistiert in
+       localStorage, gilt für alle Folgebesuche bis zur nächsten Wahl.
+       ============================================================ -->
+  <aside class="style-picker" id="menu-picker" hidden aria-label="Menü-Stil wählen">
+    <p class="style-picker__title">Menü-Stil</p>
+    <button type="button" data-menu-style="pills">Pills (Tönung)</button>
+    <button type="button" data-menu-style="outline">Outline</button>
+    <button type="button" data-menu-style="underline">Underline</button>
+    <button type="button" data-menu-style="solid">Solid</button>
+  </aside>
 </body>
 </html>

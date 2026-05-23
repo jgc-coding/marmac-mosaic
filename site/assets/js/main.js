@@ -472,4 +472,51 @@
       });
     });
   }
+
+  /* ============================================================
+     9. Menü-Stil-Picker (?menu=picker)
+     Vier Varianten: pills / outline / underline / solid.
+     Wahl wird via data-menu-style auf <body> gesetzt; CSS reagiert.
+     ============================================================ */
+  const MENU_STYLES = ['pills', 'outline', 'underline', 'solid'];
+  const MENU_STORAGE_KEY = 'marmac-menu-style';
+
+  function applyMenuStyle(style) {
+    if (!MENU_STYLES.includes(style)) style = 'pills';
+    document.body.setAttribute('data-menu-style', style);
+    document.querySelectorAll('.style-picker button[data-menu-style]').forEach(b => {
+      b.classList.toggle('is-active', b.getAttribute('data-menu-style') === style);
+    });
+  }
+
+  // 1. Persistierte Wahl beim Laden anwenden
+  try {
+    const stored = localStorage.getItem(MENU_STORAGE_KEY);
+    if (stored && MENU_STYLES.includes(stored)) applyMenuStyle(stored);
+  } catch (_) {}
+
+  // 2. URL-Param ?menu=NAME setzt direkt eine Variante,
+  //    ?menu=picker zeigt zusätzlich das Vergleichs-Widget.
+  const menuPicker = document.getElementById('menu-picker');
+  try {
+    const param = new URLSearchParams(window.location.search).get('menu');
+    if (param === 'picker' && menuPicker) {
+      menuPicker.hidden = false;
+    } else if (param && MENU_STYLES.includes(param)) {
+      applyMenuStyle(param);
+    }
+  } catch (_) {}
+
+  // 3. Click-Handler auf die Picker-Buttons
+  if (menuPicker) {
+    menuPicker.querySelectorAll('button[data-menu-style]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-menu-style');
+        applyMenuStyle(key);
+        try { localStorage.setItem(MENU_STORAGE_KEY, key); } catch (_) {}
+      });
+    });
+    // Initial-Highlight des aktiven Buttons
+    applyMenuStyle(document.body.getAttribute('data-menu-style') || 'pills');
+  }
 })();
