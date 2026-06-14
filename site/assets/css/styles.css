@@ -1,5 +1,5 @@
 /* ==========================================================================
-   MarMac-Mosaic — Stylesheet (v2)
+   MacMarMosaics — Stylesheet
    Warme, erdige Farbwelt. Mobile-first, keine externen Libraries.
 
    Sektionen:
@@ -40,11 +40,12 @@
   --font-sub:     "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --font-body:    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
                   Roboto, Helvetica, Arial, sans-serif;
-  /* Menü-Schrift — wird vom Font-Picker via JS überschrieben.
-     Default: Body (Inter). Kandidaten: Italianno, Source Sans 3, Courier Prime. */
-  --font-menu:    var(--font-body);
-  --font-menu-weight: 500;
-  --font-menu-letter: 0.01em;
+  /* Menü-Schrift — finale Wahl der Klientin: "A Sans Light" (Source Sans 3
+     Light). Werte identisch zu FONT_MAP.sans in main.js. Der Font-Picker
+     (?fonts=picker) kann dies via JS weiterhin überschreiben. */
+  --font-menu:    "Source Sans 3", "Manrope", system-ui, sans-serif;
+  --font-menu-weight: 300;
+  --font-menu-letter: 0.02em;
 
   /* Maße */
   --space-section: clamp(5rem, 10vw, 9rem);
@@ -520,9 +521,9 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
 }
 
 /* --------------------------------------------------------------------------
-   5. Hero — reiner Schriftzug "MarMac-Mosaic" (WindSong)
-   + Subline (Cormorant Garamond Italic — eleganter Kontrast zur Skript)
-   + zentrales Menü. Heller Cremegrund mit sanftem Gradient.
+   5. Hero — Schriftzug "MacMarMosaics" (WindSong) + Subline (Cormorant
+   Garamond Italic), dann der verschmolzene "Vom Foto zum Mosaik"-Block,
+   dann das zentrale Menü. Heller Cremegrund mit sanftem Gradient.
    -------------------------------------------------------------------------- */
 .hero {
   position: relative;
@@ -540,10 +541,10 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* Bottom-Padding großzügig — gibt dem nach unten aufklappenden
-     Submenu Platz innerhalb der Hero-Sektion, ohne in die nächste
-     Sektion zu ragen. */
-  padding: clamp(5rem, 14vh, 8rem) clamp(1.25rem, 5vw, 3rem) clamp(7rem, 16vh, 11rem);
+  /* Hero enthält jetzt auch den verschmolzenen Intro-Block; das Menü
+     sitzt ganz unten und sein Submenu öffnet nach oben (.submenu--up),
+     daher kein üppiges Bottom-Padding mehr nötig. */
+  padding: clamp(4.5rem, 12vh, 7rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 9vh, 6rem);
   text-align: center;
   /* overflow: visible, damit WindSong-Schwungflourishes (z. B. das
      "c" am Wortende) nicht beschnitten werden. */
@@ -577,7 +578,11 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(3.4rem, 10vw, 8rem);
+  /* "MacMarMosaics" (13 Zeichen, WindSong-Skript mit Schwung-Ausläufern)
+     ist breiter als der alte Name — kleinere Obergrenze + geringerer
+     vw-Faktor halten den Titel mit klarem Rand im Viewport, damit die
+     Flourishes nicht den Rand berühren/abgeschnitten werden. */
+  font-size: clamp(3.4rem, 8vw, 7rem);
   line-height: 1.05;
   color: var(--color-ink);
   letter-spacing: 0;
@@ -611,9 +616,21 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
   max-width: 30ch;
 }
 
-/* Zentrale Einstiegs-Nav unter Subline. */
+/* Verschmolzener Intro-Block im Hero — sitzt zwischen Subline und Menü.
+   Reihenfolge im Hero: Titel → Subline → dieser Block → Menü.
+   Nutzt die bestehenden Bausteine (.section__eyebrow, .section__title,
+   .intro__body), nur Abstände werden hier feinjustiert. */
+.hero__intro {
+  width: 100%;
+  max-width: 720px;
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+}
+.hero__intro .section__eyebrow { margin-bottom: 0.6rem; }
+.hero__intro .section__title   { margin-bottom: 1.1rem; }
+
+/* Einstiegs-Nav — sitzt ganz unten im Hero, unter dem Intro-Block. */
 .menu--hero {
-  margin-top: clamp(2rem, 5vh, 3rem);
+  margin-top: clamp(2.25rem, 5vh, 3.25rem);
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -711,10 +728,7 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
   text-align: center;
 }
 .intro__body p { margin: 0 0 1rem; }
-.intro__body p:last-child {
-  color: var(--color-ink-soft);
-  font-size: 0.92rem;
-}
+.intro__body p:last-child { margin-bottom: 0; }
 
 /* --------------------------------------------------------------------------
    9. Bisherige Arbeiten — Tabs + Karussell + Polaroid-Slide
@@ -989,7 +1003,7 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
 }
 
 .about__text p { margin: 0 0 1rem; color: var(--color-ink); }
-.about__text p:last-child { color: var(--color-ink-soft); font-size: 0.92rem; }
+.about__text p:last-child { margin-bottom: 0; }
 .about__text .section__title { text-align: left; }
 .about__text .section__eyebrow { text-align: left; }
 

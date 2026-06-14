@@ -1,5 +1,5 @@
 /* ============================================================
-   MarMac-Mosaic — legal.js
+   MacMarMosaics — legal.js
    Minimal-JS für Impressum + Datenschutz:
    - i18n init (Sprachwahl aus localStorage anwenden)
    - Lang-Switch-Button verdrahten

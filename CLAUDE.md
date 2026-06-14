@@ -1,20 +1,20 @@
-# CLAUDE.md — Projekt-Memory für MarMacMosaic-Website
+# CLAUDE.md — Projekt-Memory für MacMarMosaics-Website
 
 > Dies ist der Quick-Brief für jede neue Claude-Code-Session in diesem Projekt.
 > Beim Öffnen einer neuen Session lädt Claude diese Datei automatisch.
 
 ## Was ist das?
 
-One-Page-Landingpage für **Martina** ("MarMacMosaic") — personalisierte, handgefertigte Mosaik-Porträts. Reines statisches HTML/CSS/JS, kein Build. Auto-deployed via GitHub Actions zu GitHub Pages.
+One-Page-Landingpage für **Martina** ("MacMarMosaics") — personalisierte, handgefertigte Mosaik-Porträts. Reines statisches HTML/CSS/JS, kein Build. Auto-deployed via GitHub Actions zu GitHub Pages.
 
 **Live:** https://jgc-coding.github.io/marmac-mosaic/
 **Repo:** https://github.com/jgc-coding/marmac-mosaic
 
 ## Wichtige Konventionen
 
-- **Brand-Schreibung:** überall **„MarMacMosaic"** ohne Bindestrich. Mobile-Hero bricht via `<br class="hero__break">` nach „MarMac" um (CSS toggelt das).
+- **Brand-Schreibung:** überall **„MacMarMosaics"** ohne Bindestrich. Mobile-Hero bricht via `<br class="hero__break">` nach „MacMar" um (CSS toggelt das).
 - **Sprache:** Deutsch (Default). Englisch via Sprachschalter aktiv.
-- **„Porträt"-Begriff** soll prominent sichtbar bleiben (Hero-Subline, Intro, Kontakt-Headline) — Martinas explizite Vorgabe.
+- **„Porträt"-Begriff** soll prominent sichtbar bleiben (Hero-Subline, Hero-Intro-Block, Kontakt-Headline) — Martinas explizite Vorgabe.
 - **Ikonen-Werke** (Dalí, Elvis, Frida, Audrey) sind nur Inspiration, NICHT zum Verkauf. Hinweis-Text in der Galerie-Section macht das klar.
 
 ## Schriften
@@ -24,20 +24,20 @@ One-Page-Landingpage für **Martina** ("MarMacMosaic") — personalisierte, hand
 | Display (Hero-Title, Section-Headlines) | **WindSong** | Kursive Handschrift |
 | Subline / Fallback / Brand-Mobile | **Cormorant Garamond** | (Italic im Hero) |
 | Body / Form / Footer | **Inter** | |
-| Menü (umschaltbar) | **`--font-menu`** (Default Inter) | 4 Varianten via Picker |
+| Menü (umschaltbar) | **`--font-menu`** (Default: Source Sans 3 Light) | 4 Varianten via Picker |
 
 **Schriftpicker** (für Martina): `?fonts=picker` öffnet Widget unten rechts mit 4 Optionen:
-`italianno` (Gabriola-like), `sans` (Source Sans 3 Light, Candara-like), `courier` (Courier Prime), `default` (Inter). LocalStorage-Key: `marmac-menu-font`.
+`italianno` (Gabriola-like), `sans` (Source Sans 3 Light, Candara-like), `courier` (Courier Prime), `default` (Inter). LocalStorage-Key: `marmac-menu-font`. **Finale Wahl der Klientin: `sans` („A Sans Light", Source Sans 3 Light) — ist jetzt der Default in `:root` (styles.css).**
 
 ## Menü-Stile (5 Varianten via `?menu=picker`)
 
-Das ist eine spätere Erweiterung — Martina wählt ihren Lieblingsstil. Picker-Widget unten links bei `?menu=picker`. Direkt-Links: `?menu=pills|outline|underline|lines|solid`. LocalStorage-Key: `marmac-menu-style`. Default (ohne Wahl): `pills`.
+Martina hat ihren Lieblingsstil gewählt. Picker-Widget unten links bei `?menu=picker`. Direkt-Links: `?menu=pills|outline|underline|lines|solid`. LocalStorage-Key: `marmac-menu-style`. **Finale Wahl & Default (ohne Wahl): `underline`** — gesetzt via `data-menu-style="underline"` am `<body>` aller HTML-Seiten (JS-Fallback in main.js ebenfalls `underline`).
 
 | Stil | Beschreibung |
 |---|---|
-| **pills** (Default) | Pill mit cremig getöntem Background + Akzent-Border |
+| **pills** | Pill mit cremig getöntem Background + Akzent-Border |
 | **outline** | Pill nur mit Border, transparenter Background |
-| **underline** | Kein Container, dünner Permanent-Strich pro Item |
+| **underline** (Default) | Kein Container, dünner Permanent-Strich pro Item |
 | **lines** | Eine durchgehende Linie oben + unten am gesamten Menü, deutlich überstehend |
 | **solid** | Kräftiger dunkler Pill mit heller Schrift |
 
@@ -47,7 +47,7 @@ Implementation: CSS reagiert auf `body[data-menu-style="…"]`. Wichtig: bei neu
 
 ```
 site/
-├── index.html              # Single-Page-HTML
+├── index.html              # Single-Page-HTML (Hero enthält den Intro-Block)
 ├── impressum.html          # Platzhalter-Seite (im Footer verlinkt)
 ├── datenschutz.html        # Platzhalter (vom Form + Footer verlinkt)
 └── assets/
@@ -69,11 +69,11 @@ site/
 Alle Werke leben in [`site/assets/js/works.js`](site/assets/js/works.js). Neues Werk:
 
 1. Bilder in `site/assets/images/works/` ablegen.
-2. Eintrag in die passende Kategorie (`ikonen`, `portraits`, `haustiere`, `verschiedenes`).
+2. Eintrag in die passende Kategorie (`ikonen`, `portraits`, `verschiedenes`).
 3. Felder pro Werk: `id`, `title`, `desc` (DE), `desc_en` (EN, optional), `original`, `mosaic`, `animation` (null oder MP4-Pfad).
 4. Karussell + Detail-Overlay rendern automatisch neu.
 
-Aktuell in **ikonen** (in dieser Reihenfolge): Audrey · Dalí · Elvis · Frida. Andere Kategorien aktuell leer, zeigen „Bald hier zu sehen".
+Aktuell in **ikonen** (in dieser Reihenfolge): Audrey · Dalí · Elvis · Frida. Kategorien **`portraits`** (Persönliche Porträts) und **`verschiedenes`** (Verschiedenes, EN „Mixed") aktuell leer, zeigen „Bald hier zu sehen". (Die frühere Kategorie „Haustiere" wurde in „Verschiedenes" zusammengelegt.)
 
 ## i18n (DE/EN-Switcher)
 
@@ -84,7 +84,7 @@ Aktuell in **ikonen** (in dieser Reihenfolge): Audrey · Dalí · Elvis · Frida
 
 ## Karussell (Bisherige Arbeiten)
 
-- 4 Tabs (Subkategorien). Klick filtert.
+- 3 Tabs (Subkategorien: Ikonen · Persönliche Porträts · Verschiedenes). Klick filtert.
 - Prev/Next-Buttons + Tastatur (←/→) + Touch-Swipe (Threshold 50 px) + Dot-Indikatoren.
 - **Auto-Advance alle 6 Sekunden**. Stoppt **dauerhaft** bei jeder manuellen Interaktion (Click, Swipe, Tab-Wechsel, Detail-Open). Pause bei `document.hidden`. Kein Auto bei `prefers-reduced-motion`.
 - Wrap-around (Modulo-Index), Buttons nicht mehr disabled an Rändern.
@@ -141,23 +141,25 @@ gh run watch <id> --exit-status
 - **v3**: Hero ohne Bild, nur WindSong-Schriftzug + Cormorant-Italic-Subline auf hellem Gradient; DE/EN-Switcher; Karussell-Auto-Advance; Audrey hinzu; WhatsApp raus, Instagram rein.
 - **v3-Fix**: Hero-Titel-Cropping, Submenu-Richtung, Menü-Pills als Affordance.
 - **v3+/++/+++**: Menü-Stil-Picker (5 Varianten), Brand ohne Bindestrich, Mobile-Submenu-Fix, Lines-Variante mit durchgehenden Linien, Hero-Gradient asymmetrisch + visuelle Grenze zur Intro.
+- **v4**: Rebrand auf **MacMarMosaics**; Hero + „Vom Foto zum Mosaik" verschmolzen (Reihenfolge im Hero: Titel → Subline → Intro-Block → Menü, Submenu öffnet nach oben); finale Menü-Wahl als Default (Stil **underline**, Schrift **Source Sans 3 Light**); Kategorien „Haustiere" + „Verschiedenes" zu **Verschiedenes** (EN „Mixed") zusammengelegt; echte Intro- + Über-mich-Texte ersetzen die Platzhalter.
 
 ## Aktuelle Defaults (was Besucher ohne URL-Parameter sehen)
 
 - Sprache: nach Browser-Sprache (de oder en)
-- Menü-Stil: **pills** (Tönung + Border)
-- Menü-Schrift: **default** (Inter)
+- Menü-Stil: **underline** (dünner Permanent-Strich pro Item) — via `data-menu-style="underline"` am `<body>`
+- Menü-Schrift: **sans** („A Sans Light", Source Sans 3 Light) — via `--font-menu` in `:root`
+
+> localStorage-Wahl aus dem Picker (`marmac-menu-style` / `marmac-menu-font`) überschreibt diese Defaults weiterhin pro Browser.
 
 ## Offene Punkte — was Martina noch nachliefert
 
-- Echter Intro-Text in `index.html` (`#intro` → ersetzt Platzhalter)
-- Echter „Über mich"-Text + Portrait-Foto (`#ueber-mich` → ersetzt CSS-Tile-Placeholder)
-- Werke für die Kategorien Persönliche Porträts, Haustiere, Verschiedenes
-- Echte Kontaktdaten (E-Mail-Adresse + Instagram-Link in `index.html`)
+- Echtes Portrait-Foto für „Über mich" (`#ueber-mich` → ersetzt CSS-Tile-Placeholder)
+- Werke für die Kategorien Persönliche Porträts und Verschiedenes
+- Echte Kontaktdaten — aktuell Platzhalter `kontakt@macmarmosaics.de` / `@macmarmosaics` in `index.html`
 - Impressum + Datenschutz mit echten Angaben befüllen
-- **Entscheidung über finalen Menü-Stil** (5 Varianten via `?menu=picker`)
-- **Entscheidung über finale Menü-Schrift** (4 Optionen via `?fonts=picker`)
+- EN-Übersetzungen der neuen Texte (Intro + Über mich) von Martina gegenlesen lassen
 - Eventuell: extern produzierte Mosaik-Explosions-Animation (MP4) pro Werk in `works.js` einhängen
+- Optional: GitHub-Repo + Pages-URL von `marmac-mosaic` auf den neuen Namen umbenennen (manueller Schritt; GitHub leitet die alte URL automatisch weiter)
 
 ## Bekannte Quirks
 

@@ -1,4 +1,4 @@
-name: Deploy MarMac-Mosaic to GitHub Pages
+name: Deploy MacMarMosaics to GitHub Pages
 
 on:
   # Bei jedem Push auf main automatisch deployen

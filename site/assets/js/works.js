@@ -1,5 +1,5 @@
 /* ============================================================
-   MarMac-Mosaic — works.js
+   MacMarMosaics — works.js
    Single Source of Truth für alle Werke.
    --------------------------------------------------------------
    Neues Werk hinzufügen:
@@ -60,11 +60,8 @@ window.WORKS = {
   // Auftragsarbeiten von Verwandten/Freunden — aktuell leer.
   portraits: [],
 
-  // Tiere — aktuell leer. Falls dauerhaft leer, Kategorie aus
-  // index.html-Submenu/Tabs streichen.
-  haustiere: [],
-
-  // Restkategorie — aktuell leer.
+  // Sammelkategorie (vormals "Haustiere" + "Verschiedenes" zusammengelegt)
+  // — Tiere und alles Übrige. Aktuell leer. EN-Label: "Mixed".
   verschiedenes: []
 };
 
@@ -72,6 +69,5 @@ window.WORKS = {
 window.WORK_CATEGORIES = {
   ikonen:        'Ikonen',
   portraits:     'Persönliche Porträts',
-  haustiere:     'Haustiere',
   verschiedenes: 'Verschiedenes'
 };

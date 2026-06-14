@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title data-i18n="meta.title">MarMacMosaic — Personalisierte Mosaik-Porträts von Martina</title>
-  <meta name="description" data-i18n-content="meta.description" content="MarMacMosaic: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
+  <title data-i18n="meta.title">MacMarMosaics — Personalisierte Mosaik-Porträts von Martina</title>
+  <meta name="description" data-i18n-content="meta.description" content="MacMarMosaics: handgefertigte, personalisierte Mosaik-Porträts aus deinem Lieblingsmotiv. Vom Foto zum echten Kunstwerk." />
   <meta name="theme-color" content="#F5EFE6" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="MarMacMosaic — Personalisierte Mosaik-Porträts" />
+  <meta property="og:title" content="MacMarMosaics — Personalisierte Mosaik-Porträts" />
   <meta property="og:description" content="Vom Foto zum handgesetzten Mosaik. Porträts von Martina." />
   <meta property="og:locale" content="de_DE" />
 
@@ -26,7 +26,7 @@
   <script defer src="assets/js/i18n.js"></script>
   <script defer src="assets/js/main.js"></script>
 </head>
-<body>
+<body data-menu-style="underline">
   <!-- ============================================================
        1. TOP-NAV — beim ersten Aufruf versteckt, erscheint smooth,
        sobald der Hero verlassen wird (IntersectionObserver in main.js).
@@ -34,7 +34,7 @@
        ============================================================ -->
   <header class="nav" id="nav" aria-label="Hauptnavigation">
     <div class="nav__inner">
-      <a class="nav__brand" href="#top">MarMacMosaic</a>
+      <a class="nav__brand" href="#top">MacMarMosaics</a>
       <nav class="menu menu--top">
         <div class="menu__item menu__item--has-submenu">
           <a
@@ -48,7 +48,6 @@
           <ul class="submenu" role="menu">
             <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen"        data-i18n="submenu.icons">Ikonen</a></li>
             <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits"     data-i18n="submenu.portraits">Persönliche Porträts</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere"     data-i18n="submenu.pets">Haustiere</a></li>
             <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes" data-i18n="submenu.misc">Verschiedenes</a></li>
           </ul>
         </div>
@@ -71,19 +70,30 @@
 
   <main id="top">
     <!-- ============================================================
-         2. HERO — reiner Schriftzug "MarMacMosaic" in WindSong
-         + Subline in Cormorant-Garamond-Italic (eleganter Kontrast
-         zur Skript-Schrift). Heller Cremegrund.
-         Zentrales Menü unter der Subline; Submenu öffnet nach OBEN
-         damit es nicht vom Hero-Boden abgeschnitten wird.
+         2. HERO — Schriftzug "MacMarMosaics" (WindSong) + Subline,
+         danach der verschmolzene "Vom Foto zum Mosaik"-Block, dann das
+         Einstiegs-Menü ganz unten. Submenu öffnet nach OBEN
+         (.submenu--up), da das Menü am Hero-Boden sitzt. Heller
+         Cremegrund mit Gradient.
          ============================================================ -->
-    <section class="hero" id="hero" aria-label="MarMacMosaic">
+    <section class="hero" id="hero" aria-label="MacMarMosaics">
       <!-- <br class="hero__break"/> ist auf Desktop versteckt (display:none),
            auf Mobile sichtbar — sorgt dort für Zeilenumbruch zwischen
-           "MarMac" und "Mosaic" ohne Bindestrich. -->
-      <h1 class="hero__title">MarMac<br class="hero__break" />Mosaic</h1>
+           "MacMar" und "Mosaics" ohne Bindestrich. -->
+      <h1 class="hero__title">MacMar<br class="hero__break" />Mosaics</h1>
       <p class="hero__subline" data-i18n="hero.subline">Personalisierte Mosaik-Porträts</p>
 
+      <!-- Verschmolzener "Vom Foto zum Mosaik"-Block. Liegt above the fold,
+           daher OHNE data-reveal (sofort sichtbar wie der restliche Hero). -->
+      <div class="hero__intro">
+        <p class="section__eyebrow" data-i18n="intro.eyebrow">Vom Foto zum Mosaik</p>
+        <h2 class="section__title"  data-i18n="intro.title">Dein Porträt — Stein für Stein.</h2>
+        <div class="intro__body">
+          <p data-i18n="intro.body1">Aus einem Porträtfoto entsteht in liebevoller Handarbeit und mit viel Zeit und Geduld ein individuelles Mosaik-Porträt. Jedes einzelne ist ein Unikat und trotz ähnlicher Merkmale bleibt es immer einzigartig. Ebenso wie es die Personen in unserem Leben sind, die uns inspirieren, uns begleiten und uns am Herzen liegen.</p>
+        </div>
+      </div>
+
+      <!-- Einstiegs-Menü ganz unten im Hero; Submenu öffnet nach oben. -->
       <nav class="menu menu--hero" aria-label="Einstiegsnavigation">
         <div class="menu__item menu__item--has-submenu">
           <a
@@ -94,10 +104,9 @@
             aria-expanded="false"
             data-i18n="nav.works"
           >Arbeiten</a>
-          <ul class="submenu" role="menu">
+          <ul class="submenu submenu--up" role="menu">
             <li role="none"><a role="menuitem" href="#arbeiten" data-category="ikonen"        data-i18n="submenu.icons">Ikonen</a></li>
             <li role="none"><a role="menuitem" href="#arbeiten" data-category="portraits"     data-i18n="submenu.portraits">Persönliche Porträts</a></li>
-            <li role="none"><a role="menuitem" href="#arbeiten" data-category="haustiere"     data-i18n="submenu.pets">Haustiere</a></li>
             <li role="none"><a role="menuitem" href="#arbeiten" data-category="verschiedenes" data-i18n="submenu.misc">Verschiedenes</a></li>
           </ul>
         </div>
@@ -107,23 +116,7 @@
     </section>
 
     <!-- ============================================================
-         3. INTRO
-         ============================================================ -->
-    <section class="section section--intro" id="intro">
-      <div class="container intro">
-        <header class="section__head" data-reveal>
-          <p class="section__eyebrow" data-i18n="intro.eyebrow">Vom Foto zum Mosaik</p>
-          <h2 class="section__title"  data-i18n="intro.title">Dein Porträt — Stein für Stein.</h2>
-        </header>
-        <div class="intro__body" data-reveal>
-          <p data-i18n="intro.body1">Aus einem persönlichen Foto entsteht ein handgesetztes Mosaik-Porträt — sei es eine geliebte Person, ein Haustier oder eine Ikone, die dich begleitet. Jedes Werk ist ein Unikat, gefertigt aus tausenden kleinen Glas-, Keramik- und Natursteinen.</p>
-          <p><em data-i18n="intro.body2">(Dieser Text ist ein Platzhalter und wird später durch Martinas eigene Worte ersetzt.)</em></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================
-         4. BISHERIGE ARBEITEN — Tabs + Karussell
+         3. BISHERIGE ARBEITEN — Tabs + Karussell
          ============================================================ -->
     <section class="section section--works" id="arbeiten">
       <div class="container">
@@ -135,7 +128,6 @@
         <nav class="tabs" role="tablist" aria-label="Werk-Kategorien" data-tabs>
           <button class="tab is-active" role="tab" aria-selected="true"  data-category="ikonen"        data-i18n="submenu.icons">Ikonen</button>
           <button class="tab"            role="tab" aria-selected="false" data-category="portraits"     data-i18n="submenu.portraits">Persönliche Porträts</button>
-          <button class="tab"            role="tab" aria-selected="false" data-category="haustiere"     data-i18n="submenu.pets">Haustiere</button>
           <button class="tab"            role="tab" aria-selected="false" data-category="verschiedenes" data-i18n="submenu.misc">Verschiedenes</button>
         </nav>
 
@@ -159,7 +151,7 @@
     </section>
 
     <!-- ============================================================
-         5. ÜBER MICH
+         4. ÜBER MICH
          ============================================================ -->
     <section class="section section--about" id="ueber-mich">
       <div class="container about">
@@ -169,15 +161,15 @@
         <div class="about__text" data-reveal>
           <p class="section__eyebrow" data-i18n="about.eyebrow">Über mich</p>
           <h2 class="section__title"  data-i18n="about.title">Hinter jedem Stein steckt Geduld.</h2>
-          <p data-i18n="about.body1">Mein Name ist Martina. Seit Jahren setze ich Mosaike aus Glas-, Keramik- und Natursteinen. Jedes Werk entsteht in Handarbeit — Stein für Stein, oft über Wochen hinweg.</p>
-          <p data-i18n="about.body2">Was mich am Mosaik fasziniert: aus tausenden winzigen Teilen entsteht ein einziges großes Porträt. Genau wie Erinnerungen, die ich für meine Kundinnen und Kunden in dauerhafte Kunst verwandle.</p>
-          <p><em data-i18n="about.body3">(Dieser Text ist ein Platzhalter und wird später durch Martinas eigene Worte ersetzt.)</em></p>
+          <p data-i18n="about.body1">Nach dem Studium der Kunstgeschichte zog es mich nach Barcelona, um die Mosaikkunst des Trencadís kennenzulernen. Ich lernte, wie ich Keramikfliesen zerschlagen und zurechtschneiden musste, damit sie in der Verbindung miteinander etwas Ganzes ergeben. Während ich das Dalí-Porträt für einen mir am Herzen liegenden Freund legte, wurde mir sehr bald deutlich, dass ich meinen Schwerpunkt auf das Mosaik-Porträt setzen wollte.</p>
+          <p data-i18n="about.body2">Der gesamte Prozess ist für mich ein wunderbar meditativer — einer, der mir jegliche Verbindung zu Raum und Zeit nimmt, einer, der mich innehalten und zur Ruhe kommen lässt. Mit Liebe zum Detail, Geduld und viel Freude setze ich mich vorab und währenddessen intensiv mit jedem Foto auseinander. Das liegt natürlich daran, dass ich sehr, sehr lange darauf blicke, alle Lichtverhältnisse, jede Falte und Augenbraue Stück für Stück auseinandernehme und für jedes Stück einen passenden Keramikstein zurechtschneide.</p>
+          <p data-i18n="about.body3">Jede neue kleine Keramikstein-Kombination bringt eine weitere kleine Ähnlichkeit zum Originalfoto mit sich. Nach und nach wird das Gesicht der Person sichtbarer und meine Motivation, weiterzumachen, größer. So kann ich es kaum erwarten, am nächsten Tag wieder aufzustehen und mich mit einem Kaffee ans Werk zu setzen.</p>
         </div>
       </div>
     </section>
 
     <!-- ============================================================
-         6. KONTAKT — Formular + E-Mail + Instagram (WhatsApp raus)
+         5. KONTAKT — Formular + E-Mail + Instagram (WhatsApp raus)
          ============================================================ -->
     <section class="section section--contact" id="kontakt">
       <div class="container">
@@ -212,20 +204,20 @@
           <aside class="contact__direct" data-reveal aria-label="Direkte Kontaktwege">
             <p class="contact__direct-intro" data-i18n="contact.direct.intro">Oder direkt:</p>
 
-            <a class="btn btn--ghost" href="mailto:kontakt@marmac-mosaic.de">
+            <a class="btn btn--ghost" href="mailto:kontakt@macmarmosaics.de">
               <span class="btn__icon" aria-hidden="true">✉</span>
               <span>
                 <span class="btn__label" data-i18n="contact.email.label">E-Mail schreiben</span>
-                <span class="btn__sub">kontakt@marmac-mosaic.de</span>
+                <span class="btn__sub">kontakt@macmarmosaics.de</span>
               </span>
             </a>
 
             <!-- Instagram-Platzhalter — Link wird später von Martina gesetzt. -->
-            <a class="btn btn--ghost" href="https://instagram.com/marmac.mosaic" target="_blank" rel="noopener">
+            <a class="btn btn--ghost" href="https://instagram.com/macmarmosaics" target="_blank" rel="noopener">
               <span class="btn__icon" aria-hidden="true">◎</span>
               <span>
                 <span class="btn__label" data-i18n="contact.instagram.label">Instagram</span>
-                <span class="btn__sub" data-i18n="contact.instagram.sub">@marmac.mosaic</span>
+                <span class="btn__sub" data-i18n="contact.instagram.sub">@macmarmosaics</span>
               </span>
             </a>
 
@@ -237,12 +229,12 @@
   </main>
 
   <!-- ============================================================
-       7. FOOTER
+       6. FOOTER
        ============================================================ -->
   <footer class="footer">
     <div class="container footer__inner">
       <div class="footer__brand">
-        <p class="footer__name">MarMacMosaic</p>
+        <p class="footer__name">MacMarMosaics</p>
         <p class="footer__claim" data-i18n="footer.claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
       </div>
       <nav class="footer__nav" aria-label="Footer-Navigation">
@@ -256,7 +248,7 @@
           ·
           <a href="datenschutz.html" data-i18n="footer.privacy">Datenschutz</a>
         </p>
-        <p class="footer__copy">© 2026 MarMacMosaic</p>
+        <p class="footer__copy">© 2026 MacMarMosaics</p>
       </div>
     </div>
   </footer>

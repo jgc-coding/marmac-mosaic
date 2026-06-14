@@ -1,5 +1,5 @@
 /* ============================================================
-   MarMac-Mosaic — main.js (v3)
+   MacMarMosaics — main.js
    Module:
      1. i18n init + Sprachschalter
      2. Scroll-Reveal für [data-reveal]
@@ -482,7 +482,7 @@
   const MENU_STORAGE_KEY = 'marmac-menu-style';
 
   function applyMenuStyle(style) {
-    if (!MENU_STYLES.includes(style)) style = 'pills';
+    if (!MENU_STYLES.includes(style)) style = 'underline';
     document.body.setAttribute('data-menu-style', style);
     document.querySelectorAll('.style-picker button[data-menu-style]').forEach(b => {
       b.classList.toggle('is-active', b.getAttribute('data-menu-style') === style);
@@ -517,6 +517,6 @@
       });
     });
     // Initial-Highlight des aktiven Buttons
-    applyMenuStyle(document.body.getAttribute('data-menu-style') || 'pills');
+    applyMenuStyle(document.body.getAttribute('data-menu-style') || 'underline');
   }
 })();

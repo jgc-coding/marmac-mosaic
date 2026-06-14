@@ -1,6 +1,6 @@
-# MarMacMosaic — Website
+# MacMarMosaics — Website
 
-One-Page-Landingpage für Martina ("MarMacMosaic") — personalisierte, handgefertigte Mosaik-Porträts. Reines HTML/CSS/JS, kein Build.
+One-Page-Landingpage für Martina ("MacMarMosaics") — personalisierte, handgefertigte Mosaik-Porträts. Reines HTML/CSS/JS, kein Build.
 
 ## Lokale Entwicklung
 
@@ -30,7 +30,7 @@ Pages baut & deployed in ~30 Sekunden.
 
 ```
 site/
-├── index.html                  # Single-Page-HTML (Hero, Intro, Arbeiten, Über mich, Kontakt)
+├── index.html                  # Single-Page-HTML (Hero inkl. Intro, Arbeiten, Über mich, Kontakt)
 ├── impressum.html              # Platzhalter, im Footer verlinkt
 ├── datenschutz.html            # Platzhalter, von Form + Footer verlinkt
 └── assets/
@@ -51,7 +51,7 @@ site/
 Alle Werke leben in [`site/assets/js/works.js`](site/assets/js/works.js). Neues Werk anlegen:
 
 1. Bilder in `site/assets/images/works/` ablegen.
-2. Eintrag in die passende Kategorie (`ikonen`, `portraits`, `haustiere`, `verschiedenes`).
+2. Eintrag in die passende Kategorie (`ikonen`, `portraits`, `verschiedenes`).
 3. Fertig — Karussell + Detail-Overlay rendern automatisch.
 
 ### Detail-Overlay & Explosions-Animation
@@ -85,14 +85,11 @@ Implementation: CSS-Variable `--font-menu` wird gesetzt. Verwendet von `.menu__l
 
 ## Was Martina noch nachliefert (kein Code-Job)
 
-- Echter Intro-Text in `index.html` (`#intro` → ersetzt Platzhalter)
-- Echter "Über mich"-Text + Foto (`#ueber-mich` → ersetzt CSS-Tile-Placeholder)
-- Werke in den Kategorien Persönliche Porträts, Haustiere, Verschiedenes
-- Audrey Hepburn (Ikonen) — sobald Asset bereit
-- Echte Kontaktdaten (E-Mail, WhatsApp-Nummer in `index.html`)
-- Instagram-Link → in `index.html` das `hidden`-Attribut am `[data-instagram-slot]`-Anker entfernen, `href` setzen
+- Echtes „Über mich"-Foto (`#ueber-mich` → ersetzt den CSS-Tile-Platzhalter)
+- Werke für die Kategorien Persönliche Porträts und Verschiedenes
+- Echte Kontaktdaten (E-Mail-Adresse + Instagram-Link in `index.html`)
 - Impressum + Datenschutz mit echten Angaben befüllen
-- Entscheidung über finale Menü-Schriftart (Italianno / Sans / Courier / Standard)
+- Optional: EN-Übersetzungen der neuen Texte (Intro + Über mich) gegenlesen
 
 ## Hinweise
 
