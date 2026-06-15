@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MacMarMosaics — Atelier für handgesetzte Mosaik-Porträts</title>
+  <meta name="description" content="MacMarMosaics: handgefertigte, personalisierte Mosaik-Porträts. Vom Foto zum Mosaik — Stein für Stein. Eine Konzept-Variante der Portfolio-Seite." />
+  <meta name="theme-color" content="#0E0C0B" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MacMarMosaics — Atelier" />
+  <meta property="og:description" content="Vom Foto zum handgesetzten Mosaik. Porträts von Martina." />
+  <meta property="og:locale" content="de_DE" />
+
+  <!-- Fonts: Fraunces (Display-Serif), Inter (UI/Body), WindSong (Brand-Script), Cormorant (Italic-Subline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&family=WindSong:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+  />
+
+  <link rel="stylesheet" href="assets/css/atelier.css" />
+</head>
+<body>
+  <!-- ============================================================
+       GRAIN-OVERLAY + CUSTOM CURSOR + SCROLL-PROGRESS
+       ============================================================ -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
+  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar" id="scroll-bar"></span></div>
+
+  <!-- ============================================================
+       LOADER — Brand-Wordmark füllt sich, bis der Hero bereit ist.
+       ============================================================ -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <p class="loader__brand">MacMarMosaics</p>
+      <div class="loader__bar"><span class="loader__fill" id="loader-fill"></span></div>
+      <p class="loader__hint">Atelier wird vorbereitet</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       NAV — erscheint, sobald der Hero verlassen wird.
+       ============================================================ -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="nav__brand" href="#top" data-link>MacMarMosaics</a>
+      <nav class="nav__menu" aria-label="Hauptnavigation">
+        <a href="#arbeiten" data-link>Arbeiten</a>
+        <a href="#ueber-mich" data-link>Über mich</a>
+        <a href="#kontakt" data-link>Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ============================================================
+         HERO — Three.js-Kachel-Porträt + Brand-Wordmark
+         ============================================================ -->
+    <section class="hero" id="hero">
+      <div class="hero__stage">
+        <canvas id="hero-canvas" class="hero__canvas"></canvas>
+        <div class="hero__fallback" aria-hidden="true"></div>
+        <div class="hero__vignette" aria-hidden="true"></div>
+      </div>
+
+      <div class="hero__frame">
+        <p class="hero__kicker"><span>Atelier für handgesetzte Mosaik-Porträts</span></p>
+        <div class="hero__center" aria-hidden="true"></div>
+        <div class="hero__base">
+          <h1 class="hero__brand" aria-label="MacMarMosaics">MacMarMosaics</h1>
+          <p class="hero__subline">Personalisierte Mosaik-Porträts</p>
+          <p class="hero__tagline">Dein Porträt — Stein für Stein.</p>
+        </div>
+      </div>
+
+      <div class="hero__cue" aria-hidden="true">
+        <span class="hero__cue-label">Scrollen</span>
+        <span class="hero__cue-line"></span>
+      </div>
+
+      <ul class="hero__meta" aria-hidden="true">
+        <li>Trencadís</li>
+        <li>Handarbeit</li>
+        <li>Unikate</li>
+      </ul>
+    </section>
+
+    <!-- ============================================================
+         MANIFEST — Vom Foto zum Mosaik
+         ============================================================ -->
+    <section class="manifest" id="manifest">
+      <div class="container">
+        <p class="eyebrow" data-reveal>Vom Foto zum Mosaik</p>
+        <h2 class="manifest__title" data-split>Dein Porträt — Stein für Stein.</h2>
+        <p class="manifest__body" data-reveal>
+          Aus einem Porträtfoto entsteht in liebevoller Handarbeit und mit viel Zeit und Geduld ein
+          individuelles Mosaik-Porträt. Jedes einzelne ist ein Unikat und trotz ähnlicher Merkmale bleibt
+          es immer einzigartig. Ebenso wie es die Personen in unserem Leben sind, die uns inspirieren,
+          uns begleiten und uns am Herzen liegen.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         PROZESS — drei Schritte (aus dem Atelier-Alltag abgeleitet)
+         ============================================================ -->
+    <section class="process" id="prozess" aria-label="Der Weg zum Mosaik">
+      <div class="container">
+        <ol class="process__list">
+          <li class="process__step" data-reveal>
+            <span class="process__num">01</span>
+            <h3 class="process__head">Das Foto</h3>
+            <p class="process__text">Ein Lieblingsmotiv, lange betrachtet — jede Falte, jede Augenbraue, jedes Lichtverhältnis.</p>
+          </li>
+          <li class="process__step" data-reveal>
+            <span class="process__num">02</span>
+            <h3 class="process__head">Das Zerlegen</h3>
+            <p class="process__text">Keramikfliesen werden zerschlagen und Stück für Stück zurechtgeschnitten, bis jeder Stein passt.</p>
+          </li>
+          <li class="process__step" data-reveal>
+            <span class="process__num">03</span>
+            <h3 class="process__head">Das Setzen</h3>
+            <p class="process__text">Stein um Stein wird das Gesicht sichtbar — meditativ, geduldig, bis das Unikat vollendet ist.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ARBEITEN — horizontale, gepinnte Galerie (per JS befüllt)
+         ============================================================ -->
+    <section class="works" id="arbeiten" aria-label="Bisherige Arbeiten">
+      <div class="works__intro container">
+        <p class="eyebrow" data-reveal>Bisherige Arbeiten</p>
+        <h2 class="works__title" data-split>Eine Auswahl</h2>
+        <p class="works__lede" data-reveal>Fahre über ein Werk, um vom fertigen Mosaik zurück zum Originalfoto zu blenden.</p>
+      </div>
+
+      <div class="works__pin" data-works-pin>
+        <div class="works__track" data-works-track>
+          <!-- Karten werden in atelier.js generiert -->
+        </div>
+      </div>
+
+      <div class="works__note container" data-reveal>
+        <p>
+          Die hier gezeigten Werke der Kategorie <em>Ikonen</em> dienen als Inspiration — sie sind nicht
+          zum Verkauf. Gerne fertige ich dir dein eigenes Mosaik-Porträt:
+          <a href="#kontakt" data-link>Kontaktiere mich</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ÜBER MICH
+         ============================================================ -->
+    <section class="about" id="ueber-mich">
+      <div class="container about__grid">
+        <div class="about__media" data-reveal>
+          <div class="about__portrait" id="about-portrait" aria-hidden="true"></div>
+          <p class="about__caption">Martina · Atelier</p>
+        </div>
+        <div class="about__text">
+          <p class="eyebrow" data-reveal>Über mich</p>
+          <h2 class="about__title" data-split>Hinter jedem Stein steckt Geduld.</h2>
+          <p data-reveal>Nach dem Studium der Kunstgeschichte zog es mich nach Barcelona, um die Mosaikkunst des Trencadís kennenzulernen. Ich lernte, wie ich Keramikfliesen zerschlagen und zurechtschneiden musste, damit sie in der Verbindung miteinander etwas Ganzes ergeben. Während ich das Dalí-Porträt für einen mir am Herzen liegenden Freund legte, wurde mir sehr bald deutlich, dass ich meinen Schwerpunkt auf das Mosaik-Porträt setzen wollte.</p>
+          <p data-reveal>Der gesamte Prozess ist für mich ein wunderbar meditativer — einer, der mir jegliche Verbindung zu Raum und Zeit nimmt, einer, der mich innehalten und zur Ruhe kommen lässt. Mit Liebe zum Detail, Geduld und viel Freude setze ich mich vorab und währenddessen intensiv mit jedem Foto auseinander. Das liegt natürlich daran, dass ich sehr, sehr lange darauf blicke, alle Lichtverhältnisse, jede Falte und Augenbraue Stück für Stück auseinandernehme und für jedes Stück einen passenden Keramikstein zurechtschneide.</p>
+          <p data-reveal>Jede neue kleine Keramikstein-Kombination bringt eine weitere kleine Ähnlichkeit zum Originalfoto mit sich. Nach und nach wird das Gesicht der Person sichtbarer und meine Motivation, weiterzumachen, größer. So kann ich es kaum erwarten, am nächsten Tag wieder aufzustehen und mich mit einem Kaffee ans Werk zu setzen.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KONTAKT
+         ============================================================ -->
+    <section class="contact" id="kontakt">
+      <div class="container">
+        <header class="contact__head">
+          <p class="eyebrow" data-reveal>Kontakt</p>
+          <h2 class="contact__title" data-split>Lass uns dein Mosaik-Porträt besprechen.</h2>
+          <p class="contact__lede" data-reveal>Schreib mir, welches Motiv dir vorschwebt — oder nutze direkt E-Mail oder Instagram.</p>
+        </header>
+
+        <div class="contact__grid">
+          <form class="contact__form" id="contact-form" data-reveal novalidate>
+            <label class="field">
+              <span class="field__label">Name</span>
+              <input type="text" name="name" autocomplete="name" required />
+            </label>
+            <label class="field">
+              <span class="field__label">E-Mail</span>
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Nachricht</span>
+              <textarea name="message" rows="5" required></textarea>
+            </label>
+            <label class="field field--checkbox">
+              <input type="checkbox" name="dsgvo" required />
+              <span>Ich habe die <a href="../datenschutz.html">Datenschutzerklärung</a> gelesen und stimme zu.</span>
+            </label>
+            <button type="submit" class="btn btn--primary"><span>Anfrage senden</span></button>
+            <p class="contact__form-note" id="contact-form-note" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="contact__direct" data-reveal aria-label="Direkte Kontaktwege">
+            <p class="contact__direct-intro">Oder direkt:</p>
+
+            <a class="contact__link" href="mailto:kontakt@macmarmosaics.de" data-link>
+              <span class="contact__link-icon" aria-hidden="true">✉</span>
+              <span class="contact__link-body">
+                <span class="contact__link-label">E-Mail schreiben</span>
+                <span class="contact__link-sub">kontakt@macmarmosaics.de</span>
+              </span>
+              <span class="contact__link-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="contact__link" href="https://instagram.com/macmarmosaics" target="_blank" rel="noopener" data-link>
+              <span class="contact__link-icon" aria-hidden="true">◎</span>
+              <span class="contact__link-body">
+                <span class="contact__link-label">Instagram</span>
+                <span class="contact__link-sub">@macmarmosaics</span>
+              </span>
+              <span class="contact__link-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <p class="contact__hint">Hinweis: Alle Kontaktdaten sind Platzhalter und werden später durch Martinas echte Adressen ersetzt.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <div class="footer__wordmark" aria-hidden="true">MacMarMosaics</div>
+    <div class="container footer__inner">
+      <div class="footer__col">
+        <p class="footer__claim">Handgefertigte Mosaik-Porträts aus deinem Motiv.</p>
+      </div>
+      <nav class="footer__nav" aria-label="Footer-Navigation">
+        <a href="#arbeiten" data-link>Arbeiten</a>
+        <a href="#ueber-mich" data-link>Über mich</a>
+        <a href="#kontakt" data-link>Kontakt</a>
+      </nav>
+      <div class="footer__legal">
+        <p><a href="../impressum.html">Impressum</a> · <a href="../datenschutz.html">Datenschutz</a></p>
+        <p class="footer__copy">© 2026 MacMarMosaics</p>
+        <p class="footer__variant">Konzept-Variante · <a href="../index.html">Zur aktuellen Seite →</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       DETAIL-OVERLAY (Werk-Großansicht: Foto + Mosaik)
+       ============================================================ -->
+  <div class="detail" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="detail-title">
+    <button class="detail__close" type="button" aria-label="Schließen">×</button>
+    <div class="detail__inner">
+      <h3 id="detail-title" class="detail__title"></h3>
+      <div class="detail__pair">
+        <figure class="detail__side"><img id="detail-original" alt="" /><figcaption>Originalfoto</figcaption></figure>
+        <figure class="detail__side"><img id="detail-mosaic" alt="" /><figcaption>Mosaik</figcaption></figure>
+      </div>
+      <p class="detail__desc" id="detail-desc"></p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <!-- GSAP + ScrollTrigger (Animationen am Scroll-Fortschritt) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- Lenis (sanftes Scrollen) -->
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+  <!-- Three.js via Importmap (ES-Module) -->
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="assets/js/hero.module.js"></script>
+
+  <!-- Choreografie, Cursor, Werk-Galerie -->
+  <script src="assets/js/atelier.js"></script>
+</body>
+</html>
