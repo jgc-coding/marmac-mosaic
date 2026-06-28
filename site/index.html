@@ -137,7 +137,6 @@
             <div class="carousel__track" data-carousel-track></div>
           </div>
           <button class="carousel__btn carousel__btn--next" aria-label="Nächstes Werk" data-carousel-next>›</button>
-          <div class="carousel__dots" data-carousel-dots aria-hidden="true"></div>
         </div>
 
         <p class="carousel__empty" data-carousel-empty hidden>
@@ -169,60 +168,35 @@
     </section>
 
     <!-- ============================================================
-         5. KONTAKT — Formular + E-Mail + Instagram (WhatsApp raus)
+         5. KONTAKT — rein statisch: nur E-Mail + Instagram (Formular raus,
+         da GitHub Pages ohne Drittanbieter keine Mail versenden kann).
+         E-Mail + Instagram in der Navigations-Optik (Briefing 3).
          ============================================================ -->
     <section class="section section--contact" id="kontakt">
       <div class="container">
         <header class="section__head" data-reveal>
           <p class="section__eyebrow" data-i18n="contact.eyebrow">Kontakt</p>
           <h2 class="section__title"  data-i18n="contact.title">Lass uns dein Mosaik-Porträt besprechen.</h2>
-          <p class="section__lede"    data-i18n="contact.lede">Schreib mir, welches Motiv dir vorschwebt — oder nutze direkt E-Mail oder Instagram.</p>
         </header>
 
-        <div class="contact">
-          <form class="contact__form" id="contact-form" data-reveal novalidate>
-            <label class="field">
-              <span class="field__label" data-i18n="field.name">Name</span>
-              <input type="text" name="name" autocomplete="name" required />
-            </label>
-            <label class="field">
-              <span class="field__label" data-i18n="field.email">E-Mail</span>
-              <input type="email" name="email" autocomplete="email" required />
-            </label>
-            <label class="field">
-              <span class="field__label" data-i18n="field.message">Nachricht</span>
-              <textarea name="message" rows="5" required></textarea>
-            </label>
-            <label class="field field--checkbox">
-              <input type="checkbox" name="dsgvo" required />
-              <span data-i18n-html="field.dsgvo.html">Ich habe die <a href="datenschutz.html">Datenschutzerklärung</a> gelesen und stimme zu.</span>
-            </label>
-            <button type="submit" class="btn btn--primary" data-i18n="contact.send">Anfrage senden</button>
-            <p class="contact__form-note" id="contact-form-note" role="status" aria-live="polite"></p>
-          </form>
+        <div class="contact" data-reveal>
+          <p class="contact__text" data-i18n="contact.lede">Schreib mir, welches Motiv dir vorschwebt – oder schick mir direkt eine E-Mail.</p>
 
-          <aside class="contact__direct" data-reveal aria-label="Direkte Kontaktwege">
-            <p class="contact__direct-intro" data-i18n="contact.direct.intro">Oder direkt:</p>
+          <!-- TODO: Platzhalter — durch Martinas echte E-Mail-Adresse ersetzen. -->
+          <a class="contact__link" href="mailto:kontakt@platzhalter.de">
+            <span class="contact__link-icon" aria-hidden="true">✉</span>
+            <span data-i18n="contact.email.label">E-Mail schreiben</span>
+          </a>
 
-            <a class="btn btn--ghost" href="mailto:kontakt@macmarmosaics.de">
-              <span class="btn__icon" aria-hidden="true">✉</span>
-              <span>
-                <span class="btn__label" data-i18n="contact.email.label">E-Mail schreiben</span>
-                <span class="btn__sub">kontakt@macmarmosaics.de</span>
-              </span>
-            </a>
+          <p class="contact__text" data-i18n="contact.instagram.text">Möchtest du meine aktuellen und zukünftigen Projekte sowie den Entstehungsprozess der einzelnen Werke verfolgen? Dann folge mir auf Instagram.</p>
 
-            <!-- Instagram-Platzhalter — Link wird später von Martina gesetzt. -->
-            <a class="btn btn--ghost" href="https://instagram.com/macmarmosaics" target="_blank" rel="noopener">
-              <span class="btn__icon" aria-hidden="true">◎</span>
-              <span>
-                <span class="btn__label" data-i18n="contact.instagram.label">Instagram</span>
-                <span class="btn__sub" data-i18n="contact.instagram.sub">@macmarmosaics</span>
-              </span>
-            </a>
+          <!-- Instagram-Link — Handle ggf. von Martina bestätigen lassen. -->
+          <a class="contact__link" href="https://instagram.com/macmarmosaics" target="_blank" rel="noopener">
+            <span class="contact__link-icon" aria-hidden="true">◎</span>
+            <span data-i18n="contact.instagram.label">Instagram</span>
+          </a>
 
-            <p class="contact__hint" data-i18n="contact.hint">Hinweis: Alle Kontaktdaten sind Platzhalter und werden später durch Martinas echte Adressen ersetzt.</p>
-          </aside>
+          <p class="contact__hint" data-i18n="contact.hint">Hinweis: Die E-Mail-Adresse ist noch ein Platzhalter und wird ersetzt, sobald Martinas echte Adresse feststeht.</p>
         </div>
       </div>
     </section>
@@ -257,21 +231,28 @@
        DETAIL-OVERLAY
        ============================================================ -->
   <div class="detail" id="detail" hidden role="dialog" aria-modal="true" aria-labelledby="detail-title">
-    <button class="detail__close" type="button" aria-label="Schließen">×</button>
+    <button class="detail__close" type="button" aria-label="Schließen" data-i18n-aria="detail.close">×</button>
+    <button class="detail__nav detail__nav--prev" type="button" data-detail-prev aria-label="Vorheriges Werk" data-i18n-aria="detail.prev">‹</button>
+    <button class="detail__nav detail__nav--next" type="button" data-detail-next aria-label="Nächstes Werk" data-i18n-aria="detail.next">›</button>
     <div class="detail__inner">
       <h3 id="detail-title" class="detail__title"></h3>
       <div class="detail__animation" data-detail-animation></div>
-      <div class="detail__pair" data-detail-pair>
-        <figure class="detail__side">
-          <img data-detail-original alt="" />
-          <figcaption data-i18n="detail.original">Originalfoto</figcaption>
-        </figure>
-        <figure class="detail__side">
+
+      <!-- Mosaik groß; Klick darauf zoomt (scrollbar). -->
+      <figure class="detail__mosaic-fig">
+        <button type="button" class="detail__zoom" data-detail-zoom aria-label="Mosaik vergrößern" data-i18n-aria="detail.zoomIn">
           <img data-detail-mosaic alt="" />
-          <figcaption data-i18n="detail.mosaic">Mosaik</figcaption>
-        </figure>
-      </div>
+        </button>
+      </figure>
+
+      <p class="detail__caption" data-detail-caption></p>
       <p class="detail__desc" data-detail-desc></p>
+
+      <!-- Originalfoto klein darunter (nur wenn vorhanden). -->
+      <figure class="detail__original-fig" data-detail-original-fig hidden>
+        <img data-detail-original alt="" />
+        <figcaption data-i18n="detail.original">Originalfoto</figcaption>
+      </figure>
     </div>
   </div>
 

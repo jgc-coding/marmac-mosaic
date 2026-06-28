@@ -70,10 +70,10 @@ Alle Werke leben in [`site/assets/js/works.js`](site/assets/js/works.js). Neues 
 
 1. Bilder in `site/assets/images/works/` ablegen.
 2. Eintrag in die passende Kategorie (`ikonen`, `portraits`, `verschiedenes`).
-3. Felder pro Werk: `id`, `title`, `desc` (DE), `desc_en` (EN, optional), `original` (**optional**), `mosaic`, `animation` (null oder MP4-Pfad).
-4. Karussell + Detail-Overlay rendern automatisch neu.
+3. Felder pro Werk: `id`, `title`, `desc` (DE), `desc_en` (EN, opt.), `caption` (Material/Maße/Stunden, DE), `caption_en` (EN, opt.), `original` (**optional**), `mosaic`, `animation` (null oder MP4-Pfad).
+4. Galerie + Detail-Overlay rendern automatisch neu.
 
-**Werke ohne Vorher-Foto:** Fehlt `original`, rendert main.js automatisch eine **einzelne, zentrierte Mosaik-Karte** (`.slide--single` / `.slide__solo`) in natürlicher Bildproportion statt des getilteten Vorher/Nachher-Paars; das Detail-Overlay zeigt dann nur das Mosaik (`.detail--single`). Genutzt für die neuen Werke in `portraits` + `verschiedenes`.
+**Werke ohne Vorher-Foto:** Fehlt `original`, zeigt das Detail-Overlay nur das Mosaik (`.detail--single`, kein kleines Original). Die Galerie-Übersicht zeigt ohnehin immer nur Mosaike. Genutzt für `portraits` + `verschiedenes`.
 
 Aktuell:
 - **ikonen** (Vorher/Nachher-Paare): Audrey · Dalí · Elvis · Frida.
@@ -89,19 +89,21 @@ Die neuen Mosaik-Fotos wurden aus iPhone-HEIC (`Arbeitsproben/Neu/`) gewonnen: n
 - Sprachschalter ist die schwebende EN/DE-Pille top-right. LocalStorage-Key: `marmac-lang`. Default folgt `navigator.language`.
 - Beim Sprachwechsel ruft i18n auch `window.refreshCarousel()` auf → Karussell rendert Werk-Beschreibungen in der neuen Sprache.
 
-## Karussell (Bisherige Arbeiten)
+## Galerie (Bisherige Arbeiten) — kontinuierlicher Loop
 
-- 3 Tabs (Subkategorien: Ikonen · Persönliche Porträts · Verschiedenes). Klick filtert.
-- Prev/Next-Buttons + Tastatur (←/→) + Touch-Swipe (Threshold 50 px) + Dot-Indikatoren.
-- **Auto-Advance alle 6 Sekunden**. Stoppt **dauerhaft** bei jeder manuellen Interaktion (Click, Swipe, Tab-Wechsel, Detail-Open). Pause bei `document.hidden`. Kein Auto bei `prefers-reduced-motion`.
-- Wrap-around (Modulo-Index), Buttons nicht mehr disabled an Rändern.
-- Slide-Layout: Pair-Container 5:4, Bilder 54 % Breite, Original leicht tiefer als Mosaik (+6 % top), Tilts ±2,5°.
+- 3 Tabs (Ikonen · Persönliche Porträts · Verschiedenes). Klick filtert.
+- **Übersicht zeigt NUR Mosaike** (kein Original) als quadratische Karten (`.gcard`, `object-fit: contain` → ganze Mosaik sichtbar, Porträts mit dezenten Seitenrändern, keine angeschnittenen Köpfe) + kleiner Titel.
+- **Nahtloser Endlos-Loop (Marquee):** Karten-Liste wird vervielfacht (`copies`), Track per `requestAnimationFrame` gleichmäßig nach links geschoben (`SPEED` px/s); nach **exakt einer Listenbreite** (`baseWidth()` über `offsetLeft` der ersten Karte der 2. Kopie) zurückgesetzt → **kein sichtbares Zurückspringen**.
+- Pausiert bei **Hover/Touch** und `document.hidden`. **Pfeile** schubsen manuell (eine Kartenbreite).
+- **Modi:** `loop` (≥2 Werke, normale Motion) · `scroll` (`prefers-reduced-motion`, nativ scrollbar, kein Auto) · `center` (1 Werk, statisch zentriert, Pfeile aus). CSS-Klasse `carousel__track--{loop|scroll|center}`.
+- Hinweis: rAF pausiert in unsichtbaren/Hintergrund-Tabs (Headless-Preview!) — die Animation testet man nur im echten sichtbaren Browser; Logik (Pfeile/Wrap) ist synchron prüfbar.
 
-## Detail-Overlay (Klick aufs Werk)
+## Detail-Overlay (Klick aufs Mosaik)
 
-- Öffnet sich bei Klick auf Slide-Bild. Side-by-Side Original + Mosaik.
-- **Animations-Slot** `.detail__animation` (data-detail-animation) — wenn `work.animation` in `works.js` einen Pfad enthält, hängt main.js automatisch `<video autoplay muted controls playsinline>` ein und blendet das Side-by-Side aus (`.detail.has-animation`).
-- **Empfohlenes Format für Animations-Assets:** MP4 H.264, 1080 p, ≤ 8 MB. Optional WebM als zweite `<source>`. Lottie nur bei vektor-basierten Animationen.
+- **Mosaik groß**, darunter **Caption** (`work.caption` — Material/Maße/Stunden), **Beschreibung** (`work.desc`), dann das **Originalfoto KLEIN** (`.detail__original-fig`, nur wenn `work.original` existiert; `max-height: 20vh` ≪ Mosaik 58vh → Vorher/Nachher bleibt).
+- **Vor/Zurück** durch die Werke der Kategorie: Pfeile (`.detail__nav`), Tastatur ←/→, Touch-Wischen (Threshold 50 px, nicht im Zoom). Wrap via Modulo.
+- **Zoom:** Klick aufs Mosaik (`.detail__zoom`) → `.detail--zoomed` (Mosaik natürliche Größe + scrollbar). Esc verlässt erst den Zoom, dann das Overlay.
+- **Animations-Slot** `.detail__animation` (data-detail-animation) — wenn `work.animation` einen Pfad enthält, hängt main.js `<video autoplay muted controls playsinline>` ein und blendet Mosaik+Original aus (`.detail.has-animation`). Empfohlen: MP4 H.264, 1080 p, ≤ 8 MB.
 
 ## Wie arbeite ich an dieser Site
 
@@ -149,7 +151,8 @@ gh run watch <id> --exit-status
 - **v3-Fix**: Hero-Titel-Cropping, Submenu-Richtung, Menü-Pills als Affordance.
 - **v3+/++/+++**: Menü-Stil-Picker (5 Varianten), Brand ohne Bindestrich, Mobile-Submenu-Fix, Lines-Variante mit durchgehenden Linien, Hero-Gradient asymmetrisch + visuelle Grenze zur Intro.
 - **v4**: Rebrand auf **MacMarMosaics**; Hero + „Vom Foto zum Mosaik" verschmolzen (Reihenfolge im Hero: Titel → Subline → Intro-Block → Menü, Submenu öffnet nach oben); finale Menü-Wahl als Default (Stil **underline**, Schrift **Source Sans 3 Light**); Kategorien „Haustiere" + „Verschiedenes" zu **Verschiedenes** (EN „Mixed") zusammengelegt; echte Intro- + Über-mich-Texte ersetzen die Platzhalter.
-- **v4.1**: Erste echte Werke in **portraits** (Persönliches Porträt) + **verschiedenes** (Frosch, Schildkröte, Erdbeere, Pfeife) ergänzt — aus iPhone-HEIC freigestellt (rechteckiger Zuschnitt, Hintergrund weg). Neuer additiver **„Nur-Mosaik"-Render** (`.slide--single` / `.detail--single`) für Werke ohne Vorher-Foto; Vorher/Nachher-Werke unverändert.
+- **v4.1**: Erste echte Werke in **portraits** (Persönliches Porträt) + **verschiedenes** (Frosch, Schildkröte, Erdbeere, Pfeife) ergänzt — aus iPhone-HEIC freigestellt (rechteckiger Zuschnitt, Hintergrund weg). Neuer additiver „Nur-Mosaik"-Render für Werke ohne Vorher-Foto.
+- **v4.2** (Briefing-Update Martina): **Galerie als kontinuierlicher Loop** (Marquee, nur Mosaike, Hover-Pause, Pfeile) — ersetzt das Slide-für-Slide-Karussell + Auto-Advance. **Detail-Overlay** neu: Mosaik groß, Original klein, Vor/Zurück (Pfeile/Wisch/←→), Zoom, Caption. **Kontakt:** Formular raus → nur E-Mail (Platzhalter `kontakt@platzhalter.de`) + Instagram im Nav-Stil. **Footer** in Menü-Schrift. Werk-Captions (Material/Maße/Stunden) je Werk. Porträt `portrait-1` → Titel **„Mauro"** (Annahme, bärtiger Mann). Texte: „Geduld und Zeit", „jedem Gesicht auf dem Foto". Node: `actions/checkout@v5`.
 
 ## Aktuelle Defaults (was Besucher ohne URL-Parameter sehen)
 
@@ -159,16 +162,16 @@ gh run watch <id> --exit-status
 
 > localStorage-Wahl aus dem Picker (`marmac-menu-style` / `marmac-menu-font`) überschreibt diese Defaults weiterhin pro Browser.
 
-## Offene Punkte — was Martina noch nachliefert
+## Offene Punkte — was Martina noch nachliefert / zu klären ist
 
-- Echtes Portrait-Foto für „Über mich" (`#ueber-mich` → ersetzt CSS-Tile-Placeholder)
-- Weitere Werke für Persönliche Porträts + Verschiedenes (erste Werke sind drin; Titel/Name des Porträts „portrait-1" ggf. anpassen)
-- EN-Beschreibungen der neuen Werke (in `works.js` `desc_en`) von Martina gegenlesen lassen
-- Echte Kontaktdaten — aktuell Platzhalter `kontakt@macmarmosaics.de` / `@macmarmosaics` in `index.html`
-- Impressum + Datenschutz mit echten Angaben befüllen
-- EN-Übersetzungen der neuen Texte (Intro + Über mich) von Martina gegenlesen lassen
-- Eventuell: extern produzierte Mosaik-Explosions-Animation (MP4) pro Werk in `works.js` einhängen
-- Optional: GitHub-Repo + Pages-URL von `marmac-mosaic` auf den neuen Namen umbenennen (manueller Schritt; GitHub leitet die alte URL automatisch weiter)
+- **Nav-Unterstrich-Verhalten** (Briefing „Offen"): unklar, ob ALLE Menüpunkte ohne Unterstrich oder nur „Bisherige Arbeiten". → **bewusst NICHT geändert**, bis Martina entscheidet.
+- **Porträt-Name bestätigen:** `portrait-1` ist als **„Mauro"** eingepflegt (Annahme). **„Lisa"** aus dem Briefing fehlt das Foto — Bild liefern, dann zweites Porträt einbauen.
+- **Echte E-Mail-Adresse:** aktuell Platzhalter `kontakt@platzhalter.de` (in `index.html`, als TODO markiert) → ersetzen. Instagram-Handle `@macmarmosaics` ggf. bestätigen.
+- EN-Beschreibungen + Captions der neuen Werke (`works.js` `desc_en` / `caption_en`) gegenlesen.
+- Echtes Portrait-Foto für „Über mich" (`#ueber-mich` → ersetzt CSS-Tile-Placeholder).
+- Impressum + Datenschutz mit echten Angaben befüllen.
+- Eventuell: Mosaik-Explosions-Animation (MP4) pro Werk in `works.js` einhängen.
+- Optional: GitHub-Repo + Pages-URL von `marmac-mosaic` auf den neuen Namen umbenennen (GitHub leitet die alte URL weiter).
 
 ## Bekannte Quirks
 

@@ -3,30 +3,26 @@
 > Stand für die nächste Session. Wird bei `/save-state` komplett NEU geschrieben.
 > Dauerhafte Fakten stehen in `CLAUDE.md`, nicht hier.
 
-## Stand (diese Session = v4.1)
-- **Neue Werke ergänzt** aus iPhone-HEIC (`Arbeitsproben/Neu/`, gitignored):
-  - **portraits:** Persönliches Porträt (`portrait-1`).
-  - **verschiedenes:** Frosch, Schildkröte, Erdbeere, Pfeife.
-- Bilder freigestellt = **rechteckiger Zuschnitt knapp innerhalb der Fliesenkante** (Hintergrund Holz/Folie/Stoff weg). HEIC→PNG via pillow-heif; Zuschnitt-Skripte im Scratchpad. rembg taugte NICHT (erkennt nur das Motiv, nicht die cremefarbene Fliese).
-- Neuer **additiver „Nur-Mosaik"-Render**: fehlt `original` in works.js → einzelne, zentrierte Karte (`.slide--single`/`.slide__solo`) + Detail nur Mosaik (`.detail--single`). Vorher/Nachher-Werke (Ikonen) unverändert (Regression geprüft).
-- Verifiziert in Preview: Render/Detail/DE-EN/Mobile ok, Konsole fehlerfrei. (Screenshot-Tool hängt in dieser Umgebung — via DOM/Computed-Styles geprüft.)
-- Branch `claude/laughing-goldberg-0b9f75`. Noch NICHT auf `main` gemergt → noch nicht live.
-- Davor (v4): Rebrand MacMarMosaics, Hero/Intro-Merge, finale Menü-Wahl, echte Texte.
+## Stand (diese Session = v4.2 — Briefing-Update Martina)
+- **v4.1 zuvor live:** neue Werke (Mauro/Porträt + Frosch/Schildkröte/Erdbeere/Pfeife) freigestellt eingebaut, nach `main` gemergt + deployt.
+- **v4.2 (NEU, auf Branch, noch NICHT gemergt):** Briefing `marmac-website-update-briefing.md` umgesetzt:
+  - **Galerie = kontinuierlicher Loop** (Marquee, nur Mosaike, Hover-Pause, Pfeile) statt Slide-Karussell + Auto-Advance. Modi loop/scroll/center.
+  - **Detail-Overlay neu:** Mosaik groß, Caption (Material/Maße/Stunden), Original klein, Vor/Zurück (Pfeile/Wisch/←→), Zoom.
+  - **Kontakt:** Formular raus → nur E-Mail (Platzhalter `kontakt@platzhalter.de`, TODO) + Instagram im Nav-Stil; neuer Kontakttext.
+  - **Footer** in Menü-Schrift. **Captions** je Werk (DE+EN). **Texte:** „Geduld und Zeit", „jedem Gesicht auf dem Foto".
+  - **Node:** `actions/checkout@v5` (Pages-Actions haben noch keine Node-24-Version).
+- Verifiziert in Preview: Galerie-Logik (Pfeile/Wrap/baseWidth), Detail (Zoom/Nav/Caption/Single), Kontakt, Footer-Font, DE/EN, Mobile — Konsole fehlerfrei. (Marquee-Animation läuft nicht im Headless-Tab: rAF pausiert bei `document.hidden`; im echten Browser läuft sie.)
 
 ## Offen / wartet auf Martina (kein Code-Job)
-- **Titel/Name** für `portrait-1` (aktuell „Persönliches Porträt") prüfen/anpassen.
-- **EN-Beschreibungen** der neuen Werke (works.js `desc_en`) + alte Texte (Intro/Über-mich) gegenlesen.
-- Echtes „Über mich"-Foto (ersetzt CSS-Tile in `#ueber-mich`).
-- Weitere Werke für Persönliche Porträts + Verschiedenes (`site/assets/js/works.js`).
-- Echte Kontaktdaten (aktuell Platzhalter `kontakt@macmarmosaics.de` / `@macmarmosaics`).
-- Impressum + Datenschutz mit echten Angaben füllen.
+- **Nav-Unterstrich:** bewusst NICHT geändert (Briefing offen) — entscheiden: alle ohne Unterstrich ODER nur „Bisherige Arbeiten".
+- **Porträt-Name „Mauro"** bestätigen; **„Lisa"**-Foto liefern (fehlt) → 2. Porträt.
+- **Echte E-Mail** statt `kontakt@platzhalter.de`; Instagram-Handle bestätigen.
+- EN-Beschreibungen + Captions der Werke gegenlesen; „Über mich"-Foto; Impressum/Datenschutz.
 
 ## Nächste mögliche Schritte
-1. Branch `claude/laughing-goldberg-0b9f75` nach `main` mergen → deployt die neuen Werke live (mit Martina abstimmen).
-2. Klientinnen-Feedback zu den neuen Werken + ggf. Porträt-Titel einsammeln.
-3. Optional: GitHub-Repo + Pages-URL von `marmac-mosaic` umbenennen (manuell auf GitHub; leitet alte URL weiter).
-4. Optional: Tabs optisch exakt ans Underline-Menü angleichen (permanenter Strich pro Tab; derzeit nur aktiver Tab unterstrichen).
-5. Sobald weitere Assets/Texte da: Werke + „Über mich"-Foto + echte Kontaktdaten einpflegen.
+1. **v4.2 nach `main` mergen** → deployt das Briefing-Update live (mit Gabriel/Martina abstimmen; ist eine sichtbar große UX-Änderung).
+2. Auf echtem Gerät prüfen, dass der Marquee sauber + nahtlos läuft (im Headless-Preview pausiert rAF).
+3. Offene Punkte mit Martina klären (Unterstrich, Mauro/Lisa, E-Mail).
 
 ## Stolperfallen aktuell
 - Lokal: `npx http-server site -p 5173 -c-1 --silent` bzw. Preview „marmac-site".

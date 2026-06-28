@@ -33,7 +33,7 @@ window.I18N = {
 
       'intro.eyebrow':        'Vom Foto zum Mosaik',
       'intro.title':          'Dein Porträt — Stein für Stein.',
-      'intro.body1':          'Aus einem Porträtfoto entsteht in liebevoller Handarbeit und mit viel Zeit und Geduld ein individuelles Mosaik-Porträt. Jedes einzelne ist ein Unikat und trotz ähnlicher Merkmale bleibt es immer einzigartig. Ebenso wie es die Personen in unserem Leben sind, die uns inspirieren, uns begleiten und uns am Herzen liegen.',
+      'intro.body1':          'Aus einem Porträtfoto entsteht in liebevoller Handarbeit und mit viel Geduld und Zeit ein individuelles Mosaik-Porträt. Jedes einzelne ist ein Unikat und trotz ähnlicher Merkmale bleibt es immer einzigartig. Ebenso wie es die Personen in unserem Leben sind, die uns inspirieren, uns begleiten und uns am Herzen liegen.',
 
       'works.eyebrow':        'Bisherige Arbeiten',
       'works.title':          'Eine Auswahl',
@@ -43,12 +43,13 @@ window.I18N = {
       'about.eyebrow':        'Über mich',
       'about.title':          'Hinter jedem Stein steckt Geduld.',
       'about.body1':          'Nach dem Studium der Kunstgeschichte zog es mich nach Barcelona, um die Mosaikkunst des Trencadís kennenzulernen. Ich lernte, wie ich Keramikfliesen zerschlagen und zurechtschneiden musste, damit sie in der Verbindung miteinander etwas Ganzes ergeben. Während ich das Dalí-Porträt für einen mir am Herzen liegenden Freund legte, wurde mir sehr bald deutlich, dass ich meinen Schwerpunkt auf das Mosaik-Porträt setzen wollte.',
-      'about.body2':          'Der gesamte Prozess ist für mich ein wunderbar meditativer — einer, der mir jegliche Verbindung zu Raum und Zeit nimmt, einer, der mich innehalten und zur Ruhe kommen lässt. Mit Liebe zum Detail, Geduld und viel Freude setze ich mich vorab und währenddessen intensiv mit jedem Foto auseinander. Das liegt natürlich daran, dass ich sehr, sehr lange darauf blicke, alle Lichtverhältnisse, jede Falte und Augenbraue Stück für Stück auseinandernehme und für jedes Stück einen passenden Keramikstein zurechtschneide.',
+      'about.body2':          'Der gesamte Prozess ist für mich ein wunderbar meditativer — einer, der mir jegliche Verbindung zu Raum und Zeit nimmt, einer, der mich innehalten und zur Ruhe kommen lässt. Mit Liebe zum Detail, Geduld und viel Freude setze ich mich vorab und währenddessen intensiv mit jedem Gesicht auf dem Foto auseinander. Das liegt natürlich daran, dass ich sehr, sehr lange darauf blicke, alle Lichtverhältnisse, jede Falte und Augenbraue Stück für Stück auseinandernehme und für jedes Stück einen passenden Keramikstein zurechtschneide.',
       'about.body3':          'Jede neue kleine Keramikstein-Kombination bringt eine weitere kleine Ähnlichkeit zum Originalfoto mit sich. Nach und nach wird das Gesicht der Person sichtbarer und meine Motivation, weiterzumachen, größer. So kann ich es kaum erwarten, am nächsten Tag wieder aufzustehen und mich mit einem Kaffee ans Werk zu setzen.',
 
       'contact.eyebrow':      'Kontakt',
       'contact.title':        'Lass uns dein Mosaik-Porträt besprechen.',
-      'contact.lede':         'Schreib mir, welches Motiv dir vorschwebt — oder nutze direkt E-Mail oder Instagram.',
+      'contact.lede':         'Schreib mir, welches Motiv dir vorschwebt – oder schick mir direkt eine E-Mail.',
+      'contact.instagram.text':  'Möchtest du meine aktuellen und zukünftigen Projekte sowie den Entstehungsprozess der einzelnen Werke verfolgen? Dann folge mir auf Instagram.',
 
       'field.name':           'Name',
       'field.email':          'E-Mail',
@@ -62,10 +63,15 @@ window.I18N = {
       'contact.email.label':  'E-Mail schreiben',
       'contact.instagram.label': 'Instagram',
       'contact.instagram.sub':   '@macmarmosaics',
-      'contact.hint':         'Hinweis: Alle Kontaktdaten sind Platzhalter und werden später durch Martinas echte Adressen ersetzt.',
+      'contact.hint':         'Hinweis: Die E-Mail-Adresse ist noch ein Platzhalter und wird ersetzt, sobald Martinas echte Adresse feststeht.',
 
       'detail.original':      'Originalfoto',
       'detail.mosaic':        'Mosaik',
+      'detail.close':         'Schließen',
+      'detail.prev':          'Vorheriges Werk',
+      'detail.next':          'Nächstes Werk',
+      'detail.zoomIn':        'Mosaik vergrößern',
+      'detail.zoomOut':       'Mosaik verkleinern',
 
       'footer.claim':         'Handgefertigte Mosaik-Porträts aus deinem Motiv.',
       'footer.imprint':       'Impressum',
@@ -105,7 +111,7 @@ window.I18N = {
 
       'intro.eyebrow':        'From Photo to Mosaic',
       'intro.title':          'Your portrait — stone by stone.',
-      'intro.body1':          'From a single portrait photo, an individual mosaic portrait takes shape — lovingly crafted by hand, with plenty of time and patience. Each one is unique, and despite similar features it always stays one of a kind — just like the people in our lives who inspire us, accompany us, and are dear to our hearts.',
+      'intro.body1':          'From a single portrait photo, an individual mosaic portrait takes shape — lovingly crafted by hand, with plenty of patience and time. Each one is unique, and despite similar features it always stays one of a kind — just like the people in our lives who inspire us, accompany us, and are dear to our hearts.',
 
       'works.eyebrow':        'Past Works',
       'works.title':          'A Selection',
@@ -115,12 +121,13 @@ window.I18N = {
       'about.eyebrow':        'About me',
       'about.title':          'Patience lives in every stone.',
       'about.body1':          'After studying art history, I felt drawn to Barcelona to discover the mosaic art of Trencadís. I learned how ceramic tiles have to be broken and cut to shape so that, joined together, they form a whole. While laying the Dalí portrait for a friend dear to my heart, it soon became clear to me that I wanted to make the mosaic portrait my focus.',
-      'about.body2':          'For me, the whole process is wonderfully meditative — one that dissolves any sense of space and time, one that lets me pause and find calm. With an eye for detail, patience, and great joy, I immerse myself in each photo, both beforehand and along the way. That is because I look at it for a very, very long time — taking apart all the light and shadow, every wrinkle and eyebrow, piece by piece, and cutting a fitting ceramic stone for each one.',
+      'about.body2':          'For me, the whole process is wonderfully meditative — one that dissolves any sense of space and time, one that lets me pause and find calm. With an eye for detail, patience, and great joy, I immerse myself in each face in the photo, both beforehand and along the way. That is because I look at it for a very, very long time — taking apart all the light and shadow, every wrinkle and eyebrow, piece by piece, and cutting a fitting ceramic stone for each one.',
       'about.body3':          'Every new little combination of ceramic stones brings one more small resemblance to the original photo. Bit by bit, the person’s face becomes clearer — and my motivation to keep going grows. So I can hardly wait to get up the next morning and sit down to work with a cup of coffee.',
 
       'contact.eyebrow':      'Contact',
       'contact.title':        'Let’s talk about your mosaic portrait.',
-      'contact.lede':         'Tell me what motif you have in mind — or reach me directly via email or Instagram.',
+      'contact.lede':         'Tell me what motif you have in mind – or simply send me an email.',
+      'contact.instagram.text':  'Would you like to follow my current and future projects and see how each piece comes to life? Then follow me on Instagram.',
 
       'field.name':           'Name',
       'field.email':          'Email',
@@ -134,10 +141,15 @@ window.I18N = {
       'contact.email.label':  'Write an email',
       'contact.instagram.label': 'Instagram',
       'contact.instagram.sub':   '@macmarmosaics',
-      'contact.hint':         'Note: all contact details are placeholders and will be replaced with Martina’s real addresses later.',
+      'contact.hint':         'Note: the email address is still a placeholder and will be replaced once Martina’s real address is set.',
 
       'detail.original':      'Original photo',
       'detail.mosaic':        'Mosaic',
+      'detail.close':         'Close',
+      'detail.prev':          'Previous work',
+      'detail.next':          'Next work',
+      'detail.zoomIn':        'Enlarge mosaic',
+      'detail.zoomOut':       'Shrink mosaic',
 
       'footer.claim':         'Handcrafted mosaic portraits from your motif.',
       'footer.imprint':       'Imprint',

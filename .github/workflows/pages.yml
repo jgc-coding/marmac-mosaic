@@ -26,9 +26,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      # checkout@v5 laeuft auf Node 24 (v4 war Node 20, das GitHub auslaeuft).
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      # Hinweis: configure-pages / upload-pages-artifact / deploy-pages haben
+      # (Stand 2026-06) noch keine Node-24-Major-Version. GitHub zwingt sie auf
+      # die Node-24-Runtime (Deprecation-Warnung im Log) — der Deploy laeuft
+      # weiter. Sobald GitHub neue Majors veroeffentlicht, hier nachziehen.
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

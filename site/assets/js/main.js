@@ -5,17 +5,16 @@
      2. Scroll-Reveal für [data-reveal]
      3. Top-Nav-Reveal (Nav erscheint smooth nach dem Hero)
      4. Submenu-Toggle
-     5. Tab- + Karussell-Controller + Auto-Advance
-     6. Detail-Overlay
-     7. Kontakt-Form-Stub + DSGVO
-     8. Font-Switcher (URL-Param ?fonts=picker)
-     9. Reduced-Motion
+     5. Galerie — kontinuierlicher Endlos-Loop (Marquee) + Tabs
+     6. Detail-Overlay (Mosaik groß, Original klein, Vor/Zurück, Zoom)
+     7. Font-Switcher (URL-Param ?fonts=picker)
+     8. Menü-Stil-Picker (?menu=picker)
 
-   Animations-Slot-Doku (Briefing 8):
+   Animations-Slot-Doku:
      - Pro Werk in works.js ein "animation"-Pfad setzen (MP4 H.264
        1080p ≤ 8 MB empfohlen, optional WebM zusätzlich).
      - main.js hängt automatisch <video> in .detail__animation und
-       blendet das Side-by-Side-Paar aus (Klasse .has-animation).
+       blendet das Mosaik/Original-Paar aus (Klasse .has-animation).
    ============================================================ */
 (() => {
   'use strict';
@@ -64,7 +63,6 @@
   if (nav && hero && !nav.classList.contains('nav--always') && 'IntersectionObserver' in window) {
     const heroObserver = new IntersectionObserver(
       ([entry]) => {
-        // Nav erscheint, sobald der Hero zu weniger als ~15 % sichtbar ist.
         if (entry.intersectionRatio < 0.15) nav.classList.add('is-revealed');
         else                                nav.classList.remove('is-revealed');
       },
@@ -72,7 +70,6 @@
     );
     heroObserver.observe(hero);
   } else if (nav) {
-    // Fallback ohne IO: Nav dauerhaft sichtbar.
     nav.classList.add('is-revealed');
   }
 
@@ -107,325 +104,330 @@
     if (e.key === 'Escape') closeAllSubmenus();
   });
 
-  /* ============================================================
-     5. Tabs + Karussell (mit Auto-Advance)
-     ============================================================ */
-  const tabsContainer = document.querySelector('[data-tabs]');
-  const tabs          = tabsContainer ? tabsContainer.querySelectorAll('[data-category]') : [];
-  const track         = document.querySelector('[data-carousel-track]');
-  const viewport      = document.querySelector('[data-carousel-viewport]');
-  const prevBtn       = document.querySelector('[data-carousel-prev]');
-  const nextBtn       = document.querySelector('[data-carousel-next]');
-  const dotsContainer = document.querySelector('[data-carousel-dots]');
-  const emptyEl       = document.querySelector('[data-carousel-empty]');
-  const categoryAnchors = document.querySelectorAll('[data-category]');
-
-  const AUTO_ADVANCE_MS = 6000;
-  let currentCategory = 'ikonen';
-  let currentIndex    = 0;
-  let slidesCount     = 0;
-  let autoTimer       = null;
-  let autoStopped     = false; // Nach erster manueller Interaktion: dauerhaft aus.
-
+  /* Kleine i18n-Helfer (auch von Galerie + Detail genutzt). */
   function t(key, fallback) {
     return (window.I18N && window.I18N.t(key)) || fallback;
   }
-
-  // Lokalisierte Werk-Beschreibung holen
   function workDesc(work) {
     if (window.I18N && window.I18N.current === 'en' && work.desc_en) return work.desc_en;
     return work.desc;
   }
+  function workCaption(work) {
+    if (window.I18N && window.I18N.current === 'en' && work.caption_en) return work.caption_en;
+    return work.caption || '';
+  }
 
-  function renderSlide(work) {
-    const desc = workDesc(work);
-    const labelOriginal = t('detail.original', 'Originalfoto');
-    const labelMosaic   = t('detail.mosaic',   'Mosaik');
+  /* ============================================================
+     5. Galerie — kontinuierlicher Loop (Marquee) + Tabs
+     - Übersicht zeigt NUR Mosaike (Briefing 4); das Original
+       erscheint klein im Detail-Overlay.
+     - Endlos-Loop: die Karten-Liste wird vervielfacht und der Track
+       gleichmäßig (requestAnimationFrame) nach links geschoben; nach
+       genau EINER Listenbreite zurückgesetzt → nahtlos, kein sichtbares
+       Zurückspringen an den Anfang.
+     - Pausiert bei Hover/Touch und wenn der Tab im Hintergrund ist.
+     - Pfeile schubsen manuell vor/zurück.
+     - 1 Werk → statisch zentriert; prefers-reduced-motion → kein
+       Auto-Lauf, dafür nativ scroll-/pfeilbar.
+     ============================================================ */
+  const tabsContainer   = document.querySelector('[data-tabs]');
+  const tabs            = tabsContainer ? tabsContainer.querySelectorAll('[data-category]') : [];
+  const track           = document.querySelector('[data-carousel-track]');
+  const viewport        = document.querySelector('[data-carousel-viewport]');
+  const prevBtn         = document.querySelector('[data-carousel-prev]');
+  const nextBtn         = document.querySelector('[data-carousel-next]');
+  const emptyEl         = document.querySelector('[data-carousel-empty]');
+  const categoryAnchors = document.querySelectorAll('[data-category]');
 
-    // Werke ohne Originalfoto (nur Mosaik) → einzelne, zentrierte Karte.
-    if (!work.original) {
-      return `
-      <div class="slide slide--single" data-work-id="${work.id}">
-        <div class="slide__solo">
-          <figure class="slide__side slide__side--mosaic">
-            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelMosaic}">
-              <img src="${work.mosaic}" alt="${labelMosaic}: ${work.title}" loading="lazy" />
-            </button>
-          </figure>
-        </div>
-        <div class="slide__caption">
-          <h3 class="slide__title">${work.title}</h3>
-          <p class="slide__desc">${desc}</p>
-        </div>
-      </div>
-    `;
-    }
+  const SPEED = 38;            // px pro Sekunde — sanfter Lauf
+  let currentCategory = 'ikonen';
+  let items   = [];            // Werke der aktuellen Kategorie
+  let copies  = 1;            // Wiederholungen für den nahtlosen Loop
+  let mode    = 'center';      // 'loop' | 'scroll' | 'center'
+  let offset  = 0;            // Track-Verschiebung in px (≤ 0)
+  let paused  = false;
+  let rafId   = null;
+  let lastTs  = 0;
 
+  // Übersichts-Karte: nur das Mosaik + kleiner Titel.
+  function renderCard(work) {
+    const labelMosaic = t('detail.mosaic', 'Mosaik');
     return `
-      <div class="slide" data-work-id="${work.id}">
-        <div class="slide__pair">
-          <figure class="slide__side slide__side--original">
-            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelOriginal}">
-              <img src="${work.original}" alt="${labelOriginal}: ${work.title}" loading="lazy" />
-            </button>
-          </figure>
-          <figure class="slide__side slide__side--mosaic">
-            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelMosaic}">
-              <img src="${work.mosaic}" alt="${labelMosaic}: ${work.title}" loading="lazy" />
-            </button>
-          </figure>
-        </div>
-        <div class="slide__caption">
-          <h3 class="slide__title">${work.title}</h3>
-          <p class="slide__desc">${desc}</p>
-        </div>
-      </div>
+      <figure class="gcard" data-work-id="${work.id}">
+        <button type="button" class="gcard__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelMosaic}">
+          <img src="${work.mosaic}" alt="${labelMosaic}: ${work.title}" loading="lazy" />
+        </button>
+        <figcaption class="gcard__title">${work.title}</figcaption>
+      </figure>
     `;
   }
 
-  function renderDots(count) {
-    if (!dotsContainer) return;
-    dotsContainer.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-      const dot = document.createElement('button');
-      dot.className = 'carousel__dot' + (i === 0 ? ' is-active' : '');
-      dot.type = 'button';
-      dot.setAttribute('aria-label', `Werk ${i + 1}`);
-      dot.addEventListener('click', () => { stopAuto(); goTo(i); });
-      dotsContainer.appendChild(dot);
+  function buildStripHTML() {
+    let html = '';
+    for (let c = 0; c < copies; c++) html += items.map(renderCard).join('');
+    return html;
+  }
+
+  function applyTransform() { track.style.transform = `translateX(${offset}px)`; }
+
+  // Breite EINER Werk-Liste = Abstand der ersten Karte der 2. Kopie zur ersten
+  // Karte (inkl. Lücken) → exakte, nahtlose Loop-Distanz.
+  function baseWidth() {
+    const cards = track.children;
+    if (cards.length > items.length && items.length > 0) {
+      return cards[items.length].offsetLeft - cards[0].offsetLeft;
     }
+    return track.scrollWidth;
   }
 
-  function updateOffset() {
-    if (!viewport || !track) return;
-    const w = viewport.offsetWidth;
-    track.style.setProperty('--carousel-offset', `-${currentIndex * w}px`);
-    if (dotsContainer) {
-      dotsContainer.querySelectorAll('.carousel__dot').forEach((d, i) => {
-        d.classList.toggle('is-active', i === currentIndex);
-      });
+  function normalize() {
+    const bw = baseWidth();
+    if (bw <= 10) return;
+    while (offset <= -bw) offset += bw;
+    while (offset > 0)    offset -= bw;
+  }
+
+  function tick(ts) {
+    if (!lastTs) lastTs = ts;
+    const dt = Math.min(0.05, (ts - lastTs) / 1000); // dt deckeln (Tab-Rückkehr)
+    lastTs = ts;
+    if (!paused && mode === 'loop' && items.length) {
+      offset -= SPEED * dt;
+      normalize();
+      applyTransform();
     }
-    // Buttons NICHT mehr deaktivieren — Karussell wraps endlos durch.
-    // (Mit Auto-Advance soll der Nutzer manuell ebenfalls beliebig vor/zurück.)
-    if (prevBtn) prevBtn.disabled = false;
-    if (nextBtn) nextBtn.disabled = false;
+    rafId = window.requestAnimationFrame(tick);
+  }
+  function startLoop() { if (rafId == null) { lastTs = 0; rafId = window.requestAnimationFrame(tick); } }
+  function stopLoop()  { if (rafId != null) { window.cancelAnimationFrame(rafId); rafId = null; } }
+
+  function stepSize() {
+    const card = track.querySelector('.gcard');
+    return card ? card.getBoundingClientRect().width + 24 : 220;
   }
 
-  function goTo(i) {
-    if (slidesCount === 0) return;
-    // Wrap-around: i wird modulo slidesCount.
-    currentIndex = ((i % slidesCount) + slidesCount) % slidesCount;
-    updateOffset();
-  }
-
-  function next() { goTo(currentIndex + 1); }
-  function prev() { goTo(currentIndex - 1); }
-
-  function startAuto() {
-    if (autoStopped || reduceMotion || slidesCount < 2) return;
-    stopAutoTimer();
-    autoTimer = setInterval(() => next(), AUTO_ADVANCE_MS);
-  }
-  function stopAutoTimer() {
-    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
-  }
-  function stopAuto() {
-    autoStopped = true;
-    stopAutoTimer();
+  // Manueller Schubs per Pfeil.
+  function nudge(dir) {
+    const step = stepSize();
+    if (mode === 'scroll') {
+      viewport.scrollBy({ left: dir * step, behavior: 'smooth' });
+      return;
+    }
+    if (mode === 'loop') {
+      offset -= dir * step;
+      normalize();
+      applyTransform();
+    }
   }
 
   function setCategory(cat) {
     if (!window.WORKS || !window.WORKS[cat]) return;
     currentCategory = cat;
-    const works = window.WORKS[cat];
-    slidesCount = works.length;
-    currentIndex = 0;
+    items = window.WORKS[cat] || [];
 
-    tabs.forEach(t => {
-      const active = t.getAttribute('data-category') === cat;
-      t.classList.toggle('is-active', active);
-      t.setAttribute('aria-selected', active ? 'true' : 'false');
+    tabs.forEach(tb => {
+      const active = tb.getAttribute('data-category') === cat;
+      tb.classList.toggle('is-active', active);
+      tb.setAttribute('aria-selected', active ? 'true' : 'false');
     });
 
-    if (slidesCount === 0) {
-      if (track) track.innerHTML = '';
+    stopLoop();
+    offset = 0; lastTs = 0;
+
+    if (items.length === 0) {
+      track.innerHTML = '';
+      track.className = 'carousel__track carousel__track--center';
+      track.style.transform = 'translateX(0)';
       if (emptyEl) emptyEl.hidden = false;
       if (prevBtn) prevBtn.hidden = true;
       if (nextBtn) nextBtn.hidden = true;
-      if (dotsContainer) dotsContainer.innerHTML = '';
-      stopAutoTimer();
       return;
     }
-
     if (emptyEl) emptyEl.hidden = true;
-    if (prevBtn) prevBtn.hidden = false;
-    if (nextBtn) nextBtn.hidden = false;
 
-    track.innerHTML = works.map(renderSlide).join('');
-    renderDots(slidesCount);
-    updateOffset();
-    startAuto();
+    // Modus bestimmen.
+    if (items.length <= 1)      mode = 'center';
+    else if (reduceMotion)      mode = 'scroll';
+    else                        mode = 'loop';
+
+    copies = (mode === 'loop') ? Math.max(2, Math.ceil(16 / items.length)) : 1;
+    track.innerHTML = buildStripHTML();
+    track.className = 'carousel__track carousel__track--' + mode;
+    track.style.transform = 'translateX(0)';
+    if (viewport) viewport.classList.toggle('carousel__viewport--scroll', mode === 'scroll');
+
+    // Pfeile nur sinnvoll ab 2 Werken.
+    if (prevBtn) prevBtn.hidden = items.length < 2;
+    if (nextBtn) nextBtn.hidden = items.length < 2;
+
+    if (mode === 'loop') startLoop();
   }
 
-  // Tab-Click filtert (gilt als manuelle Interaktion → Auto stoppt).
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      stopAuto();
-      setCategory(tab.getAttribute('data-category'));
-    });
+  // Pause bei Hover/Touch.
+  if (viewport) {
+    viewport.addEventListener('mouseenter', () => { paused = true; });
+    viewport.addEventListener('mouseleave', () => { paused = false; });
+    viewport.addEventListener('touchstart', () => { paused = true; },  { passive: true });
+    viewport.addEventListener('touchend',   () => { paused = false; }, { passive: true });
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopLoop();
+    else if (mode === 'loop' && items.length) startLoop();
   });
 
-  // Submenu-Anchor: Klick filtert + scrollt.
+  // Tabs + Submenu-Anchors filtern.
+  tabs.forEach(tab => tab.addEventListener('click', () => setCategory(tab.getAttribute('data-category'))));
   categoryAnchors.forEach(a => {
     if (a.tagName !== 'A') return;
     a.addEventListener('click', () => {
       const cat = a.getAttribute('data-category');
-      if (cat) {
-        stopAuto();
-        setCategory(cat);
-        closeAllSubmenus();
-      }
+      if (cat) { setCategory(cat); closeAllSubmenus(); }
     });
   });
 
-  if (prevBtn) prevBtn.addEventListener('click', () => { stopAuto(); prev(); });
-  if (nextBtn) nextBtn.addEventListener('click', () => { stopAuto(); next(); });
-
-  if (viewport) {
-    viewport.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); stopAuto(); next(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); stopAuto(); prev(); }
-    });
-    viewport.setAttribute('tabindex', '0');
-  }
-
-  let pointerStartX = null;
-  function onPointerDown(e) {
-    pointerStartX = (e.touches ? e.touches[0].clientX : e.clientX);
-  }
-  function onPointerUp(e) {
-    if (pointerStartX == null) return;
-    const endX = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
-    const dx = endX - pointerStartX;
-    pointerStartX = null;
-    if (Math.abs(dx) > 50) {
-      stopAuto();
-      if (dx < 0) next();
-      else        prev();
-    }
-  }
-  if (viewport) {
-    viewport.addEventListener('touchstart', onPointerDown, { passive: true });
-    viewport.addEventListener('touchend',   onPointerUp,   { passive: true });
-  }
-
-  // Auto-Advance pausieren wenn der Tab im Hintergrund ist (höflich
-  // gegenüber CPU & Akku), wieder anlaufen wenn sichtbar — solange
-  // der Nutzer nicht manuell interagiert hat.
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopAutoTimer();
-    else if (!autoStopped) startAuto();
-  });
+  if (prevBtn) prevBtn.addEventListener('click', () => nudge(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => nudge(1));
 
   let resizeT = null;
   window.addEventListener('resize', () => {
     clearTimeout(resizeT);
-    resizeT = setTimeout(updateOffset, 100);
+    resizeT = setTimeout(() => { normalize(); applyTransform(); }, 120);
   });
 
   // Initial-Render
-  if (track && window.WORKS) {
-    setCategory(currentCategory);
-  }
+  if (track && window.WORKS) setCategory(currentCategory);
 
-  // Beim Sprachwechsel ruft i18n.setLanguage() refreshCarousel()
-  // auf, damit die Werk-Beschreibungen + Labels neu rendern.
+  // Beim Sprachwechsel: Karten-Titel + ggf. offenes Detail neu rendern.
   window.refreshCarousel = function () {
-    if (slidesCount > 0) {
-      const works = window.WORKS[currentCategory] || [];
-      track.innerHTML = works.map(renderSlide).join('');
-      updateOffset();
+    if (track && items.length) {
+      track.innerHTML = buildStripHTML();
+      normalize();
+      applyTransform();
     }
+    if (detail && !detail.hidden && currentDetail) renderDetail(currentDetail);
   };
 
   /* ============================================================
      6. Detail-Overlay
+     - Mosaik groß (klickbar = Zoom), Caption (Material/Maße/Stunden),
+       Beschreibung, darunter das Originalfoto KLEIN (falls vorhanden).
+     - Vor/Zurück durch die Werke der Kategorie (Pfeile + Wischen + ←/→).
+     - Zoom: Klick aufs Mosaik vergrößert es scrollbar.
      ============================================================ */
   const detail        = document.getElementById('detail');
-  const detailTitle   = detail ? detail.querySelector('[id="detail-title"]') : null;
+  const detailTitle   = detail ? detail.querySelector('#detail-title') : null;
   const detailAnim    = detail ? detail.querySelector('[data-detail-animation]') : null;
   const detailOrig    = detail ? detail.querySelector('[data-detail-original]') : null;
+  const detailOrigFig = detail ? detail.querySelector('[data-detail-original-fig]') : null;
   const detailMosaic  = detail ? detail.querySelector('[data-detail-mosaic]') : null;
+  const detailZoomBtn = detail ? detail.querySelector('[data-detail-zoom]') : null;
+  const detailCaption = detail ? detail.querySelector('[data-detail-caption]') : null;
   const detailDesc    = detail ? detail.querySelector('[data-detail-desc]') : null;
   const detailClose   = detail ? detail.querySelector('.detail__close') : null;
-  let detailLastFocus = null;
+  const detailPrev    = detail ? detail.querySelector('[data-detail-prev]') : null;
+  const detailNext    = detail ? detail.querySelector('[data-detail-next]') : null;
 
-  function findWork(id) {
+  let detailLastFocus = null;
+  let detailCat = null;   // Kategorie-Schlüssel des aktuellen Werks
+  let detailIdx = 0;      // Index innerhalb der Kategorie
+  let currentDetail = null;
+  let detailZoomed = false;
+
+  function locateWork(id) {
     if (!window.WORKS) return null;
-    for (const cat of Object.values(window.WORKS)) {
-      const w = cat.find(x => x.id === id);
-      if (w) return w;
+    for (const [cat, list] of Object.entries(window.WORKS)) {
+      const i = list.findIndex(w => w.id === id);
+      if (i !== -1) return { cat, idx: i, list };
     }
     return null;
   }
 
-  function openDetail(workId) {
-    const work = findWork(workId);
-    if (!work || !detail) return;
+  function setZoom(on) {
+    detailZoomed = on;
+    if (!detail) return;
+    detail.classList.toggle('detail--zoomed', on);
+    if (detailZoomBtn) {
+      detailZoomBtn.setAttribute('aria-label',
+        on ? t('detail.zoomOut', 'Mosaik verkleinern') : t('detail.zoomIn', 'Mosaik vergrößern'));
+    }
+    if (!on && detailZoomBtn) detailZoomBtn.scrollTo({ left: 0, top: 0 });
+  }
 
-    detailLastFocus = document.activeElement;
-    detailTitle.textContent  = work.title;
-    detailDesc.textContent   = workDesc(work);
+  function renderDetail(work) {
+    currentDetail = work;
+    detailTitle.textContent = work.title;
+    detailMosaic.src = work.mosaic;
+    detailMosaic.alt = `${t('detail.mosaic', 'Mosaik')}: ${work.title}`;
+    if (detailCaption) detailCaption.textContent = workCaption(work);
+    if (detailDesc)    detailDesc.textContent    = workDesc(work);
 
-    // Werke ohne Originalfoto: nur Mosaik zeigen (Original-Figur ausblenden).
-    const origFigure = detailOrig ? detailOrig.closest('.detail__side') : null;
+    // Originalfoto klein — nur wenn vorhanden.
     if (work.original) {
       detailOrig.src = work.original;
-      detailOrig.alt = `${t('detail.original','Originalfoto')}: ${work.title}`;
-      if (origFigure) origFigure.hidden = false;
+      detailOrig.alt = `${t('detail.original', 'Originalfoto')}: ${work.title}`;
+      if (detailOrigFig) detailOrigFig.hidden = false;
       detail.classList.remove('detail--single');
     } else {
-      detailOrig.src = '';
+      detailOrig.removeAttribute('src');
       detailOrig.alt = '';
-      if (origFigure) origFigure.hidden = true;
+      if (detailOrigFig) detailOrigFig.hidden = true;
       detail.classList.add('detail--single');
     }
-    detailMosaic.src         = work.mosaic;
-    detailMosaic.alt         = `${t('detail.mosaic','Mosaik')}: ${work.title}`;
 
+    // Animations-Slot.
     detailAnim.innerHTML = '';
     if (work.animation) {
       const v = document.createElement('video');
-      v.src         = work.animation;
-      v.autoplay    = true;
-      v.muted       = true;
-      v.controls    = true;
-      v.playsInline = true;
+      v.src = work.animation;
+      v.autoplay = true; v.muted = true; v.controls = true; v.playsInline = true;
       detailAnim.appendChild(v);
       detail.classList.add('has-animation');
     } else {
       detail.classList.remove('has-animation');
     }
 
+    setZoom(false);
+
+    // Vor/Zurück nur ab 2 Werken in der Kategorie.
+    const count = (window.WORKS[detailCat] || []).length;
+    if (detailPrev) detailPrev.hidden = count < 2;
+    if (detailNext) detailNext.hidden = count < 2;
+  }
+
+  function openDetail(id) {
+    const loc = locateWork(id);
+    if (!loc || !detail) return;
+    detailCat = loc.cat;
+    detailIdx = loc.idx;
+    detailLastFocus = document.activeElement;
+    renderDetail(loc.list[loc.idx]);
     detail.hidden = false;
     document.body.style.overflow = 'hidden';
-    stopAuto(); // Auto-Advance stoppt beim Öffnen des Detail-Overlays.
     if (detailClose) detailClose.focus();
+  }
+
+  function detailGo(dir) {
+    if (!detailCat) return;
+    const list = window.WORKS[detailCat] || [];
+    if (list.length < 2) return;
+    detailIdx = (detailIdx + dir + list.length) % list.length;
+    renderDetail(list[detailIdx]);
   }
 
   function closeDetail() {
     if (!detail || detail.hidden) return;
+    setZoom(false);
     detail.hidden = true;
     detail.classList.remove('has-animation');
-    if (detailAnim) detailAnim.innerHTML = '';
-    if (detailOrig) detailOrig.src = '';
-    if (detailMosaic) detailMosaic.src = '';
+    if (detailAnim)   detailAnim.innerHTML = '';
+    if (detailMosaic) detailMosaic.removeAttribute('src');
+    if (detailOrig)   detailOrig.removeAttribute('src');
+    currentDetail = null;
     document.body.style.overflow = '';
-    if (detailLastFocus && typeof detailLastFocus.focus === 'function') {
-      detailLastFocus.focus();
-    }
+    if (detailLastFocus && typeof detailLastFocus.focus === 'function') detailLastFocus.focus();
   }
 
+  // Klick auf eine Galerie-Karte → Detail öffnen.
   document.addEventListener('click', e => {
     const trigger = e.target.closest('[data-open-detail]');
     if (trigger) {
@@ -433,34 +435,41 @@
       openDetail(trigger.getAttribute('data-open-detail'));
       return;
     }
+    // Klick auf den abgedunkelten Hintergrund schließt.
     if (detail && !detail.hidden && e.target === detail) closeDetail();
   });
 
   if (detailClose) detailClose.addEventListener('click', closeDetail);
+  if (detailPrev)  detailPrev.addEventListener('click', () => detailGo(-1));
+  if (detailNext)  detailNext.addEventListener('click', () => detailGo(1));
+  if (detailZoomBtn) detailZoomBtn.addEventListener('click', () => setZoom(!detailZoomed));
+
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && detail && !detail.hidden) closeDetail();
+    if (!detail || detail.hidden) return;
+    if (e.key === 'Escape') {
+      if (detailZoomed) setZoom(false);
+      else closeDetail();
+    } else if (e.key === 'ArrowLeft')  { e.preventDefault(); detailGo(-1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); detailGo(1); }
   });
 
-  /* ============================================================
-     7. Kontakt-Form-Stub + DSGVO
-     ============================================================ */
-  const form = document.getElementById('contact-form');
-  const formNote = document.getElementById('contact-form-note');
-  if (form && formNote) {
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const dsgvo = form.querySelector('input[name="dsgvo"]');
-      if (dsgvo && !dsgvo.checked) {
-        formNote.textContent = t('contact.note.dsgvo', 'Bitte bestätige die Datenschutzerklärung, um fortzufahren.');
-        dsgvo.focus();
-        return;
-      }
-      formNote.textContent = t('contact.note.thanks', 'Vielen Dank! Das Formular ist noch nicht angebunden.');
-    });
+  // Wischen im Detail → Vor/Zurück (nicht im gezoomten Zustand, da wird gescrollt).
+  if (detail) {
+    let dStartX = null;
+    detail.addEventListener('touchstart', ev => {
+      dStartX = ev.touches ? ev.touches[0].clientX : null;
+    }, { passive: true });
+    detail.addEventListener('touchend', ev => {
+      if (dStartX == null || detailZoomed) { dStartX = null; return; }
+      const endX = ev.changedTouches ? ev.changedTouches[0].clientX : dStartX;
+      const dx = endX - dStartX;
+      dStartX = null;
+      if (Math.abs(dx) > 50) detailGo(dx < 0 ? 1 : -1);
+    }, { passive: true });
   }
 
   /* ============================================================
-     8. Font-Switcher (URL-Param ?fonts=picker)
+     7. Font-Switcher (URL-Param ?fonts=picker)
      ============================================================ */
   const FONT_MAP = {
     italianno: { stack: '"Italianno", "Allura", cursive',                       weight: 400, letter: '0.02em' },
@@ -506,8 +515,8 @@
   }
 
   /* ============================================================
-     9. Menü-Stil-Picker (?menu=picker)
-     Vier Varianten: pills / outline / underline / solid.
+     8. Menü-Stil-Picker (?menu=picker)
+     Varianten: pills / outline / underline / lines / solid.
      Wahl wird via data-menu-style auf <body> gesetzt; CSS reagiert.
      ============================================================ */
   const MENU_STYLES = ['pills', 'outline', 'underline', 'lines', 'solid'];
@@ -521,14 +530,11 @@
     });
   }
 
-  // 1. Persistierte Wahl beim Laden anwenden
   try {
     const stored = localStorage.getItem(MENU_STORAGE_KEY);
     if (stored && MENU_STYLES.includes(stored)) applyMenuStyle(stored);
   } catch (_) {}
 
-  // 2. URL-Param ?menu=NAME setzt direkt eine Variante,
-  //    ?menu=picker zeigt zusätzlich das Vergleichs-Widget.
   const menuPicker = document.getElementById('menu-picker');
   try {
     const param = new URLSearchParams(window.location.search).get('menu');
@@ -539,7 +545,6 @@
     }
   } catch (_) {}
 
-  // 3. Click-Handler auf die Picker-Buttons
   if (menuPicker) {
     menuPicker.querySelectorAll('button[data-menu-style]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -548,7 +553,6 @@
         try { localStorage.setItem(MENU_STORAGE_KEY, key); } catch (_) {}
       });
     });
-    // Initial-Highlight des aktiven Buttons
     applyMenuStyle(document.body.getAttribute('data-menu-style') || 'underline');
   }
 })();
