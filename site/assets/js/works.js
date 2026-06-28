@@ -11,7 +11,9 @@
    - id          : eindeutiger Schlüssel (kebab-case)
    - title       : Anzeige-Titel (z. B. "Salvador Dalí")
    - desc        : ein-Satz-Beschreibung (Caption + Detail)
-   - original    : Pfad zum Originalfoto
+   - original    : Pfad zum Originalfoto (OPTIONAL — weglassen, wenn nur ein
+                   Mosaik-Foto vorliegt; dann rendert eine einzelne, zentrierte
+                   Karte statt des Vorher/Nachher-Paars).
    - mosaic      : Pfad zum fertigen Mosaik
    - animation   : optional — Pfad zu MP4/WebM der Explosions-Animation
                    (siehe Detail-Overlay-Doku in main.js).
@@ -57,12 +59,55 @@ window.WORKS = {
     }
   ],
 
-  // Auftragsarbeiten von Verwandten/Freunden — aktuell leer.
-  portraits: [],
+  // Persönliche Porträts (Auftrags-/persönliche Arbeiten). Nur Mosaik-Foto
+  // vorhanden → kein "original" (rendert als einzelne Karte).
+  portraits: [
+    {
+      id:        'portrait-1',
+      title:     'Persönliches Porträt',
+      desc:      'Persönliches Porträt in Schwarz, Weiß und Grautönen — vom Foto Stein für Stein gelegt.',
+      desc_en:   'Personal portrait in black, white and shades of gray — laid stone by stone from a photo.',
+      mosaic:    'assets/images/works/portrait-1-mosaic.jpg',
+      animation: null
+    }
+  ],
 
   // Sammelkategorie (vormals "Haustiere" + "Verschiedenes" zusammengelegt)
-  // — Tiere und alles Übrige. Aktuell leer. EN-Label: "Mixed".
-  verschiedenes: []
+  // — Tiere und alles Übrige. EN-Label: "Mixed". Nur Mosaik-Fotos → kein "original".
+  verschiedenes: [
+    {
+      id:        'frosch',
+      title:     'Frosch',
+      desc:      'Ein Frosch auf einem Ast, in frischen Grün- und tiefen Brauntönen.',
+      desc_en:   'A frog on a branch, in fresh greens and deep browns.',
+      mosaic:    'assets/images/works/frosch-mosaic.jpg',
+      animation: null
+    },
+    {
+      id:        'schildkroete',
+      title:     'Schildkröte',
+      desc:      'Eine kleine Schildkröte in abgestuften Grüntönen.',
+      desc_en:   'A little turtle in graduated shades of green.',
+      mosaic:    'assets/images/works/schildkroete-mosaic.jpg',
+      animation: null
+    },
+    {
+      id:        'erdbeere',
+      title:     'Erdbeere',
+      desc:      'Eine reife Erdbeere aus leuchtend roten Keramikbruchstücken.',
+      desc_en:   'A ripe strawberry made of bright red ceramic shards.',
+      mosaic:    'assets/images/works/erdbeere-mosaic.jpg',
+      animation: null
+    },
+    {
+      id:        'pfeife',
+      title:     'Pfeife',
+      desc:      'Eine klassische Pfeife in warmem Bordeaux und Schwarz.',
+      desc_en:   'A classic pipe in warm burgundy and black.',
+      mosaic:    'assets/images/works/pfeife-mosaic.jpg',
+      animation: null
+    }
+  ]
 };
 
 /* Lesbare Kategorien-Labels (Single Source für Submenu, Tabs, Detail). */

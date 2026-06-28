@@ -70,10 +70,17 @@ Alle Werke leben in [`site/assets/js/works.js`](site/assets/js/works.js). Neues 
 
 1. Bilder in `site/assets/images/works/` ablegen.
 2. Eintrag in die passende Kategorie (`ikonen`, `portraits`, `verschiedenes`).
-3. Felder pro Werk: `id`, `title`, `desc` (DE), `desc_en` (EN, optional), `original`, `mosaic`, `animation` (null oder MP4-Pfad).
+3. Felder pro Werk: `id`, `title`, `desc` (DE), `desc_en` (EN, optional), `original` (**optional**), `mosaic`, `animation` (null oder MP4-Pfad).
 4. Karussell + Detail-Overlay rendern automatisch neu.
 
-Aktuell in **ikonen** (in dieser Reihenfolge): Audrey · Dalí · Elvis · Frida. Kategorien **`portraits`** (Persönliche Porträts) und **`verschiedenes`** (Verschiedenes, EN „Mixed") aktuell leer, zeigen „Bald hier zu sehen". (Die frühere Kategorie „Haustiere" wurde in „Verschiedenes" zusammengelegt.)
+**Werke ohne Vorher-Foto:** Fehlt `original`, rendert main.js automatisch eine **einzelne, zentrierte Mosaik-Karte** (`.slide--single` / `.slide__solo`) in natürlicher Bildproportion statt des getilteten Vorher/Nachher-Paars; das Detail-Overlay zeigt dann nur das Mosaik (`.detail--single`). Genutzt für die neuen Werke in `portraits` + `verschiedenes`.
+
+Aktuell:
+- **ikonen** (Vorher/Nachher-Paare): Audrey · Dalí · Elvis · Frida.
+- **portraits** (Persönliche Porträts, nur Mosaik): Persönliches Porträt (`portrait-1`). Weitere folgen.
+- **verschiedenes** (EN „Mixed", nur Mosaik): Frosch · Schildkröte · Erdbeere · Pfeife.
+
+Die neuen Mosaik-Fotos wurden aus iPhone-HEIC (`Arbeitsproben/Neu/`) gewonnen: nach PNG gewandelt, Hintergrund per **rechteckigem Zuschnitt knapp innerhalb der Fliesenkante** entfernt (Pillow/pillow-heif; rembg taugte hier NICHT, weil das Salient-Modell nur das farbige Motiv statt der cremefarbenen Fliese erkennt) und als `…-mosaic.jpg` (≤ 1500 px, q90) gespeichert. (Die frühere Kategorie „Haustiere" wurde in „Verschiedenes" zusammengelegt.)
 
 ## i18n (DE/EN-Switcher)
 
@@ -142,6 +149,7 @@ gh run watch <id> --exit-status
 - **v3-Fix**: Hero-Titel-Cropping, Submenu-Richtung, Menü-Pills als Affordance.
 - **v3+/++/+++**: Menü-Stil-Picker (5 Varianten), Brand ohne Bindestrich, Mobile-Submenu-Fix, Lines-Variante mit durchgehenden Linien, Hero-Gradient asymmetrisch + visuelle Grenze zur Intro.
 - **v4**: Rebrand auf **MacMarMosaics**; Hero + „Vom Foto zum Mosaik" verschmolzen (Reihenfolge im Hero: Titel → Subline → Intro-Block → Menü, Submenu öffnet nach oben); finale Menü-Wahl als Default (Stil **underline**, Schrift **Source Sans 3 Light**); Kategorien „Haustiere" + „Verschiedenes" zu **Verschiedenes** (EN „Mixed") zusammengelegt; echte Intro- + Über-mich-Texte ersetzen die Platzhalter.
+- **v4.1**: Erste echte Werke in **portraits** (Persönliches Porträt) + **verschiedenes** (Frosch, Schildkröte, Erdbeere, Pfeife) ergänzt — aus iPhone-HEIC freigestellt (rechteckiger Zuschnitt, Hintergrund weg). Neuer additiver **„Nur-Mosaik"-Render** (`.slide--single` / `.detail--single`) für Werke ohne Vorher-Foto; Vorher/Nachher-Werke unverändert.
 
 ## Aktuelle Defaults (was Besucher ohne URL-Parameter sehen)
 
@@ -154,7 +162,8 @@ gh run watch <id> --exit-status
 ## Offene Punkte — was Martina noch nachliefert
 
 - Echtes Portrait-Foto für „Über mich" (`#ueber-mich` → ersetzt CSS-Tile-Placeholder)
-- Werke für die Kategorien Persönliche Porträts und Verschiedenes
+- Weitere Werke für Persönliche Porträts + Verschiedenes (erste Werke sind drin; Titel/Name des Porträts „portrait-1" ggf. anpassen)
+- EN-Beschreibungen der neuen Werke (in `works.js` `desc_en`) von Martina gegenlesen lassen
 - Echte Kontaktdaten — aktuell Platzhalter `kontakt@macmarmosaics.de` / `@macmarmosaics` in `index.html`
 - Impressum + Datenschutz mit echten Angaben befüllen
 - EN-Übersetzungen der neuen Texte (Intro + Über mich) von Martina gegenlesen lassen

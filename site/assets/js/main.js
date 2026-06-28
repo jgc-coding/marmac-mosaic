@@ -141,6 +141,26 @@
     const desc = workDesc(work);
     const labelOriginal = t('detail.original', 'Originalfoto');
     const labelMosaic   = t('detail.mosaic',   'Mosaik');
+
+    // Werke ohne Originalfoto (nur Mosaik) → einzelne, zentrierte Karte.
+    if (!work.original) {
+      return `
+      <div class="slide slide--single" data-work-id="${work.id}">
+        <div class="slide__solo">
+          <figure class="slide__side slide__side--mosaic">
+            <button type="button" class="slide__image" data-open-detail="${work.id}" aria-label="${work.title} — ${labelMosaic}">
+              <img src="${work.mosaic}" alt="${labelMosaic}: ${work.title}" loading="lazy" />
+            </button>
+          </figure>
+        </div>
+        <div class="slide__caption">
+          <h3 class="slide__title">${work.title}</h3>
+          <p class="slide__desc">${desc}</p>
+        </div>
+      </div>
+    `;
+    }
+
     return `
       <div class="slide" data-work-id="${work.id}">
         <div class="slide__pair">
@@ -356,8 +376,20 @@
     detailLastFocus = document.activeElement;
     detailTitle.textContent  = work.title;
     detailDesc.textContent   = workDesc(work);
-    detailOrig.src           = work.original;
-    detailOrig.alt           = `${t('detail.original','Originalfoto')}: ${work.title}`;
+
+    // Werke ohne Originalfoto: nur Mosaik zeigen (Original-Figur ausblenden).
+    const origFigure = detailOrig ? detailOrig.closest('.detail__side') : null;
+    if (work.original) {
+      detailOrig.src = work.original;
+      detailOrig.alt = `${t('detail.original','Originalfoto')}: ${work.title}`;
+      if (origFigure) origFigure.hidden = false;
+      detail.classList.remove('detail--single');
+    } else {
+      detailOrig.src = '';
+      detailOrig.alt = '';
+      if (origFigure) origFigure.hidden = true;
+      detail.classList.add('detail--single');
+    }
     detailMosaic.src         = work.mosaic;
     detailMosaic.alt         = `${t('detail.mosaic','Mosaik')}: ${work.title}`;
 

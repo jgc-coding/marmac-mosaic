@@ -863,6 +863,26 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
               0 30px 60px -22px rgba(42, 31, 23, 0.55);
 }
 
+/* Einzel-Werke (nur Mosaik, kein Vorher-Foto): eine zentrierte, gerade Karte
+   in natürlicher Bildproportion statt des getilteten 5:4-Paars. */
+.slide--single .slide__solo {
+  width: 100%;
+  max-width: clamp(220px, 70vw, 400px);
+  margin: 0 auto;
+}
+.slide--single .slide__side {
+  position: static;
+  width: 100%;
+  transform: none;          /* gerade, ohne Polaroid-Tilt */
+}
+.slide--single .slide__image {
+  aspect-ratio: auto;       /* echte Bildproportion behalten (kein 4:5-Crop) */
+  border-radius: 10px;      /* dezente Rundung — passt zu den realen Fliesenecken */
+}
+.slide--single .slide__image img {
+  height: auto;             /* Bild bestimmt die Höhe selbst */
+}
+
 .slide__caption {
   text-align: center;
   margin-top: 1.25rem;
@@ -1258,6 +1278,13 @@ body[data-menu-style="lines"] .menu::after  { bottom: 0; }
   grid-template-columns: 1fr 1fr;
   gap: clamp(1rem, 2vw, 2rem);
 }
+/* Einzel-Werke (nur Mosaik): eine zentrierte Spalte, Original-Figur verborgen. */
+.detail--single .detail__pair {
+  grid-template-columns: 1fr;
+  max-width: 620px;
+  margin-inline: auto;
+}
+.detail__side[hidden] { display: none; }
 .detail__side { margin: 0; text-align: center; }
 .detail__side img {
   width: 100%;
